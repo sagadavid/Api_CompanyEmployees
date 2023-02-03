@@ -19,8 +19,10 @@ namespace CodeMaze_CompanyEmployees.Extensions
                 });
         public static void ConfigureIISIntegration(this IServiceCollection services) =>
             services.Configure<IISOptions>(options =>
-            { 
-            
+            {
+                //options.AutomaticAuthentication = true;
+                //options.AuthenticationDisplayName = null;
+                //options.ForwardClientCertificate = true;
             });
         
     }
