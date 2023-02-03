@@ -9,8 +9,19 @@ namespace CodeMaze_CompanyEmployees.Extensions
             => services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy", builder =>
-                builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+                builder
+                //.WithOrigins("https://someweb.com")
+                .AllowAnyOrigin()
+                //.WithMethods("GET")
+                .AllowAnyMethod()
+                //.WithHeaders("accept")
+                .AllowAnyHeader());
                 });
+        public static void ConfigureIISIntegration(this IServiceCollection services) =>
+            services.Configure<IISOptions>(options =>
+            { 
+            
+            });
         
     }
 }
