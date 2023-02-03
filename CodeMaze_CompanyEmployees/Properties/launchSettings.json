@@ -17,6 +17,8 @@
       "applicationUrl": "https://localhost:7165;http://localhost:5091",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
+        //"ASPNETCORE_ENVIRONMENT": "Production"
+        //We can set the variable through the command prompt by typing set ASPNETCORE_ENVIRONMENT=Production
       }
     },
     "IIS Express": {

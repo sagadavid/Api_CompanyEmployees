@@ -22,10 +22,10 @@ else
 
 app.UseHttpsRedirection();
 
-app.UseStaticFiles();
+app.UseStaticFiles();//enable static files for the request
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 { 
-ForwardedHeaders=ForwardedHeaders.All
+ForwardedHeaders=ForwardedHeaders.All//headers matching, request vs proxy
 });
 
 app.UseCors("CorsPolicy");
