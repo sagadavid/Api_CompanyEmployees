@@ -1,6 +1,12 @@
+using CodeMaze_CompanyEmployees.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+//extensions added
+builder.Services.ConfigureCors();
+builder.Services.ConfigureIISIntegration();
 
 builder.Services.AddControllers();
 
