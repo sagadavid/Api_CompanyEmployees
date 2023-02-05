@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using Contracts;
+using System.Runtime.CompilerServices;
 
 namespace CodeMaze_CompanyEmployees.Extensions
 {
@@ -24,6 +25,10 @@ namespace CodeMaze_CompanyEmployees.Extensions
                 //options.AuthenticationDisplayName = null;
                 //options.ForwardClientCertificate = true;
             });
-        
+
+        public static void ConfigureLoggerService(this IServiceCollection services) =>
+         services.AddSingleton<ILoggerManager, LoggerManager>();
+
+
     }
 }
