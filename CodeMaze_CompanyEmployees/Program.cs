@@ -1,5 +1,4 @@
 using CodeMaze_CompanyEmployees.Extensions;
-using Contracts;
 using Microsoft.AspNetCore.HttpOverrides;
 using NLog;
 
@@ -8,16 +7,19 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 //configure logger service for logging messages
-LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(),
+LogManager.LoadConfiguration(string.Concat
+    (Directory.GetCurrentDirectory(),
     "/nlog.config"));
 
 //developer extensions added
 builder.Services.ConfigureCors();
+
 builder.Services.ConfigureIISIntegration();
+
 builder.Services.ConfigureLoggerService();
 //builder.Services.AddSingleton<ILoggerManager, LoggerManager>();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers();//allows registering controller
 
 var app = builder.Build();
 
@@ -31,15 +33,19 @@ else
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();//enable static files for the request
-app.UseForwardedHeaders(new ForwardedHeadersOptions
+
+app.UseForwardedHeaders
+    (new ForwardedHeadersOptions
 { 
-ForwardedHeaders=ForwardedHeaders.All//headers matching, request vs proxy
+ForwardedHeaders=
+ForwardedHeaders.All//headers matching,
+                    //request vs proxy
 });
 
-app.UseCors("CorsPolicy");
+app.UseCors("CorsPolicy");//which we chose/defined
 
 app.UseAuthorization();
 
-app.MapControllers();
+app.MapControllers();//adds endpoints from controller
 
 app.Run();

@@ -1,0 +1,8 @@
+﻿logging:
+
+1/contracts and loggerservice files are 
+created of class library and renamed as new projects under existing project
+2/dependencies/add project reference/check loggerservice (to import)
+3/add interface--> iloggermanager to contracts as add new item
+4/load NLog package
+5/loggermanager class to implement iloggermanager
