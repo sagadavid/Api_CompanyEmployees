@@ -35,8 +35,13 @@ namespace CodeMaze_CompanyEmployees.Controllers
                 ("Here is an error message from our values controller.");
 
             return new string[] { "value1", "value2" };
-
+            /*
+             * 2023-02-10 09:39:44.3316 Debug FileTarget(Name=logfile): Preparing for new file: 'C:\Users\SAGAWIN\source\repos\sagadavid\Api_CompanyEmployees\CodeMaze_CompanyEmployees\bin\Debug\net6.0\.\logs\2023-02-10_logfile.txt'
+             * 2023-02-10 09:39:44.3316 Debug FileTarget(Name=logfile): Creating file appender: 'C:\Users\SAGAWIN\source\repos\sagadavid\Api_CompanyEmployees\CodeMaze_CompanyEmployees\bin\Debug\net6.0\.\logs\2023-02-10_logfile.txt'
+             * 2023-02-10 09:39:44.3402 Trace FileTarget(Name=logfile): Opening C:\Users\SAGAWIN\source\repos\sagadavid\Api_CompanyEmployees\CodeMaze_CompanyEmployees\bin\Debug\net6.0\.\logs\2023-02-10_logfile.txt with allowFileSharedWriting=False
+*/
         }
+
         [HttpGet("forecast")]
         public IEnumerable<WeatherForecast> GetForecast()
         {

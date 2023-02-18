@@ -1,6 +1,9 @@
 using CodeMaze_CompanyEmployees.Extensions;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using NLog;
+using Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
