@@ -11,11 +11,13 @@ namespace Repository
         { 
         }
 
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)//seeddata
-        //{
-        //    modelBuilder.ApplyConfiguration(new CompanyConfiguration());
-        //    modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
-        //}
+        //seed data
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+    //invoke ientitytypeconfiguration implemented classes to seed data/apply configuration
+            modelBuilder.ApplyConfiguration(new CompanyConfiguration());
+            modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
+        }
 
 
         public DbSet<Company>? Companies { get; set; }

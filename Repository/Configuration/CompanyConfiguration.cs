@@ -11,6 +11,9 @@ using Repository;
 namespace Repository.Configuration
 {
     public class CompanyConfiguration : IEntityTypeConfiguration<Company>
+    //IEntityTypeConfiguration
+    //Allows configuration for an entity type to be factored into a separate class,
+    // rather than in-line in <see cref="DbContext.OnModelCreating(ModelBuilder)" />.
     {
         public void Configure(EntityTypeBuilder<Company> builder)
         {

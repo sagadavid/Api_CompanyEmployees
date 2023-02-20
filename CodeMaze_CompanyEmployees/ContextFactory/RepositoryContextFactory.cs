@@ -23,10 +23,10 @@ namespace CodeMaze_CompanyEmployees.ContextFactory
             b => b.MigrationsAssembly("CodeMaze_CompanyEmployees"));//migrationassembly is the main projects name
                                                                     //otherwise mentioned, sucks by the belowed error
             
-            //PM> add-migration dbcreation -->
-            //System.IO.FileNotFoundException: Could not load file or assembly
-            //'CompanyEmployeesDB, Culture=neutral, PublicKeyToken=null'.
-            //The system cannot find the file specified.
+                                                                    //PM> add-migration dbcreation -->
+                                                                    //System.IO.FileNotFoundException: Could not load file or assembly
+                                                                    //'CompanyEmployeesDB, Culture=neutral, PublicKeyToken=null'.
+                                                                    //The system cannot find the file specified.
 
             //We have to make this change because migration assembly is
             //not in our main project, but in the Repository project.
