@@ -1,17 +1,16 @@
 ﻿using Contracts;//necessary to mention
 using LoggerService;//necessary to mention
+using Repository;
 
 namespace CodeMaze_CompanyEmployees.Extensions
 {
     public static class ServiceExtensions
     {
      //ADD CORS
-        public static void ConfigureCors
-            (this IServiceCollection services)
-            => services.AddCors(options =>
+        public static void ConfigureCors(this IServiceCollection services)=> 
+            services.AddCors(options =>
             {
-                options.AddPolicy
-                ("CorsPolicy", builder =>
+                options.AddPolicy("CorsPolicy", builder =>
                 builder
                 //.WithOrigins("https://someweb.com")
                 .AllowAnyOrigin()
@@ -20,8 +19,7 @@ namespace CodeMaze_CompanyEmployees.Extensions
                 //.WithHeaders("accept")
                 .AllowAnyHeader());
                 });
-        public static void ConfigureIISIntegration
-            (this IServiceCollection services) =>
+        public static void ConfigureIISIntegration(this IServiceCollection services) =>
             services.Configure<IISOptions>(options =>
             {
                 //options.AutomaticAuthentication = true;
@@ -29,8 +27,7 @@ namespace CodeMaze_CompanyEmployees.Extensions
                 //options.ForwardClientCertificate = true;
             });
 
-        public static void ConfigureLoggerService
-            (this IServiceCollection services) =>
+        public static void ConfigureLoggerService(this IServiceCollection services) =>
          services.AddSingleton<ILoggerManager, LoggerManager>();
         //result : C:\Users\SAGAWIN\source\repos\sagadavid\Api_CompanyEmployees\CodeMaze_CompanyEmployees\bin\Debug\net6.0\logs
         /*2023-02-07 15:36:00.2264 INFO Here is info message from our values controller.
@@ -43,5 +40,11 @@ namespace CodeMaze_CompanyEmployees.Extensions
 2023-02-07 15:59:39.4413 ERROR Here is an error message from our values controller.*/
         //https://localhost:7165/weatherforecast
         //["value1","value2"]
+
+        /*after repository manager and modifying service extension, 
+         * The repository layer is prepared and ready to be used to 
+         * fetch data from the database.*/
+        public static void ConfigureRepositoryManager(this IServiceCollection services) =>
+            services.AddScoped<IRepositoryManager, RepositoryManager>();
     }
 }

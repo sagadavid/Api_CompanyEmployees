@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 
 namespace Repository
 {
-    public class CompanyRepository:IRepositoryBase<Company>, ICompanyRepository
+    public class CompanyRepository:RepositoryBase<Company>, ICompanyRepository
     {
+        public CompanyRepository(RepositoryContext repositoryContext):
+            base(repositoryContext) { }
     }
 }

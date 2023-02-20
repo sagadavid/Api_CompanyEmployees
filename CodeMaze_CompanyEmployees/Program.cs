@@ -10,9 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 //configure logger service for logging messages
-LogManager.LoadConfiguration(string.Concat
-    (Directory.GetCurrentDirectory(),
-    "/nlog.config"));
+LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(),"/nlog.config"));
 
 //developer extensions added
 builder.Services.ConfigureCors();
@@ -20,7 +18,9 @@ builder.Services.ConfigureCors();
 builder.Services.ConfigureIISIntegration();
 
 builder.Services.ConfigureLoggerService();
-//builder.Services.AddSingleton<ILoggerManager, LoggerManager>();
+//builder.Services.AddSingleton<ILoggerManager, LoggerManager>();//instead
+
+builder.Services.ConfigureRepositoryManager();
 
 builder.Services.AddControllers();//allows registering controller
 
