@@ -3,6 +3,7 @@ using LoggerService;//necessary to mention
 using Repository;
 using Service.Contracts;
 using Service;
+using Microsoft.EntityFrameworkCore;
 
 namespace CodeMaze_CompanyEmployees.Extensions
 {
@@ -13,14 +14,10 @@ namespace CodeMaze_CompanyEmployees.Extensions
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy", builder =>
-                builder
-                //.WithOrigins("https://someweb.com")
-                .AllowAnyOrigin()
-                //.WithMethods("GET")
-                .AllowAnyMethod()
-                //.WithHeaders("accept")
-                .AllowAnyHeader());
-                });
+                builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+                
+                //.WithOrigins("https://someweb.com").WithMethods("GET").WithHeaders("accept")
+            });
         public static void ConfigureIISIntegration(this IServiceCollection services) =>
             services.Configure<IISOptions>(options =>
             {
@@ -32,14 +29,14 @@ namespace CodeMaze_CompanyEmployees.Extensions
         public static void ConfigureLoggerService(this IServiceCollection services) =>
          services.AddSingleton<ILoggerManager, LoggerManager>();
         //result : C:\Users\SAGAWIN\source\repos\sagadavid\Api_CompanyEmployees\CodeMaze_CompanyEmployees\bin\Debug\net6.0\logs
-        /*2023-02-07 15:36:00.2264 INFO Here is info message from our values controller.
-2023-02-07 15:36:00.2739 DEBUG Here is debug message from our values controller.
-2023-02-07 15:36:00.2739 WARN Here is warn message from our values controller.
-2023-02-07 15:36:00.2739 ERROR Here is an error message from our values controller.
-2023-02-07 15:59:39.3972 INFO Here is info message from our values controller.
-2023-02-07 15:59:39.4272 DEBUG Here is debug message from our values controller.
-2023-02-07 15:59:39.4413 WARN Here is warn message from our values controller.
-2023-02-07 15:59:39.4413 ERROR Here is an error message from our values controller.*/
+        /*  2023-02-07 15:36:00.2264 INFO Here is info message from our values controller.
+            2023-02-07 15:36:00.2739 DEBUG Here is debug message from our values controller.
+            2023-02-07 15:36:00.2739 WARN Here is warn message from our values controller.
+            2023-02-07 15:36:00.2739 ERROR Here is an error message from our values controller.
+            2023-02-07 15:59:39.3972 INFO Here is info message from our values controller.
+            2023-02-07 15:59:39.4272 DEBUG Here is debug message from our values controller.
+            2023-02-07 15:59:39.4413 WARN Here is warn message from our values controller.
+            2023-02-07 15:59:39.4413 ERROR Here is an error message from our values controller.*/
         //https://localhost:7165/weatherforecast
         //["value1","value2"]
 
@@ -51,5 +48,20 @@ namespace CodeMaze_CompanyEmployees.Extensions
 
         public static void ConfigureServiceManager(this IServiceCollection services) =>
             services.AddScoped<IServiceManager, ServiceManager>();
+
+        /*as you could see, we have the RepositoryManager service registration, 
+         * which happens at runtime, and during that registration, 
+         * we must have RepositoryContext registered as well in the runtime, 
+         * so we could inject it into other services (like RepositoryManager service). 
+         * This might be a bit confusing, so let’s see what that means for us. 
+         * SO.. modify the ServiceExtensions class:
+         * We are not specifying the MigrationAssembly inside the UseSqlServer method. 
+         * We don’t need it in this case.
+         * and.. call this method in the Program class*/
+        public static void ConfigureSqlContext(this IServiceCollection services, 
+            IConfiguration configuration) =>
+                services.AddDbContext<RepositoryContext>(opts =>
+                    opts.UseSqlServer(configuration.GetConnectionString("sqlConnection")));
+
     }
 }

@@ -1,14 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;//contains Microsoft.EntityFrameworkCore.SqlServer;
 using Microsoft.EntityFrameworkCore.Design;//necessary
 using Repository;//necessary
-
+/*With the RepositoryContextFactory class, which implements the IDesignTimeDbContextFactory
+ * interface, we have registered our RepositoryContext class at design time. 
+ * This helps us find the RepositoryContext class in another project while executing migrations.*/
 namespace CodeMaze_CompanyEmployees.ContextFactory
 {
-    //Since our RepositoryContext class is in a Repository project
-    //and not in the main one,
-    //this contxtfactory class will help our application
-    //create a derived DbContext instance during the design time which
-    //will help us with our migrations:
+ //Since our RepositoryContext class is in a Repository project
+//and not in the main one,this contxtfactory class will help our application
+//create a derived DbContext instance during the design time which will
+//help us with our migrations:
     public class RepositoryContextFactory : 
         IDesignTimeDbContextFactory<RepositoryContext>//We are using the IDesignTimeDbContextFactory<out TContext> interface that allows design-time services to discover implementations of this interface. Of course, the TContext parameter is our RepositoryContext class.
     {
