@@ -1,6 +1,8 @@
 ﻿using Contracts;//necessary to mention
 using LoggerService;//necessary to mention
 using Repository;
+using Service.Contracts;
+using Service;
 
 namespace CodeMaze_CompanyEmployees.Extensions
 {
@@ -46,5 +48,8 @@ namespace CodeMaze_CompanyEmployees.Extensions
          * fetch data from the database.*/
         public static void ConfigureRepositoryManager(this IServiceCollection services) =>
             services.AddScoped<IRepositoryManager, RepositoryManager>();
+
+        public static void ConfigureServiceManager(this IServiceCollection services) =>
+            services.AddScoped<IServiceManager, ServiceManager>();
     }
 }
