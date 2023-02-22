@@ -43,14 +43,14 @@ namespace Repository
          * modify two employees, and delete one company — all in one action — and then 
          * just call the Save method once. All the changes will be applied or if something
          * fails, all the changes will be reverted:
-            _repository.Company.Create(company);
-            _repository.Company.Create(anotherCompany);
-            _repository.Employee.Update(employee);
-            _repository.Employee.Update(anotherEmployee);
+            _repository.ICompanyRepo.Create(company);
+            _repository.ICompanyRepo.Create(anotherCompany);
+            _repository.IEmployeeRepo.Update(employee);
+            _repository.IEmployeeRepo.Update(anotherEmployee);
          */
-        public ICompanyRepository Company => _companyRepository.Value;
+        public ICompanyRepository ICompanyRepo => _companyRepository.Value;
 
-        public IEmployeeRepository Employee => _employeeRepostitory.Value;
+        public IEmployeeRepository IEmployeeRepo => _employeeRepostitory.Value;
 
         public void Save()=> _repositoryContext.SaveChanges();
     }

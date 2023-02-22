@@ -18,11 +18,10 @@ namespace Repository
         //RepositoryContext=repositoryContext;//??sample code usage??
 
         public IQueryable<T> FindAll(bool trackChanges) =>
-        !trackChanges ?
             //When it’s set to false, we attach the AsNoTracking method to
             //our query to inform EF Core that it doesn’t need to track changes
             //for the required entities. This greatly improves the speed of a query.
-                   
+            !trackChanges ?
             _repositoryContext.Set<T>().AsNoTracking() :
             _repositoryContext.Set<T>();
         //RepositoryContext.Set<T>().AsNoTracking() :

@@ -25,7 +25,7 @@ namespace CodeMaze_CompanyEmployees.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Entities.Models.Company", b =>
+            modelBuilder.Entity("Entities.Models.ICompanyRepo", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -66,7 +66,7 @@ namespace CodeMaze_CompanyEmployees.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Entities.Models.Employee", b =>
+            modelBuilder.Entity("Entities.Models.IEmployeeRepo", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -122,18 +122,18 @@ namespace CodeMaze_CompanyEmployees.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Entities.Models.Employee", b =>
+            modelBuilder.Entity("Entities.Models.IEmployeeRepo", b =>
                 {
-                    b.HasOne("Entities.Models.Company", "Company")
+                    b.HasOne("Entities.Models.ICompanyRepo", "ICompanyRepo")
                         .WithMany("Employees")
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Company");
+                    b.Navigation("ICompanyRepo");
                 });
 
-            modelBuilder.Entity("Entities.Models.Company", b =>
+            modelBuilder.Entity("Entities.Models.ICompanyRepo", b =>
                 {
                     b.Navigation("Employees");
                 });

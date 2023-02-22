@@ -26,13 +26,14 @@ builder.Services.ConfigureServiceManager();
 
 builder.Services.ConfigureSqlContext(builder.Configuration);
 
-builder.Services.AddControllers()//allows registering controller
-    /*without modifying addcontrollers, our API wouldn’t work
+/*without modifying addcontrollers, our API wouldn’t work
      * -because we deleted controller folder and files and presented presentation project-, 
-     * and wouldn’t know where to route incoming requests. But now, our app will find all 
+     * and wouldn’t know where to route incoming requests. 
+     * But now, our app will find all 
      * of the controllers inside of the Presentation project and configure 
      * them with the framework. They are going to be treated the same as if 
      * they were defined conventionally.*/
+builder.Services.AddControllers()//allows registering controller
     .AddApplicationPart(typeof(CompanyEmployees.Presentation.AssemblyReference).Assembly);
 
 var app = builder.Build();
@@ -60,6 +61,12 @@ app.UseCors("CorsPolicy");//which we chose/defined
 
 app.UseAuthorization();
 
-app.MapControllers();//adds endpoints from controller
+//adds endpoints for controller actions without specifying any routes.
+//so..by default, dont need to configure //app.UseRouting();
+app.MapControllers();
+
+//default route configuration for MVC
+//app.UseRouting();
+//app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

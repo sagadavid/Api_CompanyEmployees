@@ -1,4 +1,5 @@
 ﻿using Contracts;
+using Entities.Models;
 using Service.Contracts;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Service
 {
-    internal class CompanyService : ICompanyService
+    internal sealed class CompanyService : ICompanyService
     {
         //using IRepositoryManager to access the repository methods
         //from each user repository class (CompanyRepository or EmployeeRepository)
@@ -21,5 +22,22 @@ namespace Service
             _repoMan= repoMan;  
         }
 
+        public IEnumerable<Company> GetAllCompanies(bool trackChanges)
+        {
+            try
+            {
+                var companies = _repoMan.ICompanyRepo.GetAllCompanies(trackChanges);
+                return companies;
+            }
+            catch (Exception ex)
+            {
+
+                _logMan.LogError($"noe er feil i {nameof(GetAllCompanies)} " +
+                    $"service method: {ex}");
+                throw;
+            }
+        }
+
+      
     }
 }
