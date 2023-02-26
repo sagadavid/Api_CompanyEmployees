@@ -23,7 +23,7 @@ namespace Repository
             //for the required entities. This greatly improves the speed of a query.
             !trackChanges ?
             _repositoryContext.Set<T>().AsNoTracking() :
-            _repositoryContext.Set<T>();
+            _repositoryContext.Set<T>();//https://stackoverflow.com/questions/53469498/difference-between-dbsett-property-and-sett-function-in-ef-core
         //RepositoryContext.Set<T>().AsNoTracking() :
         //RepositoryContext.Set<T>();//sample code ??
 

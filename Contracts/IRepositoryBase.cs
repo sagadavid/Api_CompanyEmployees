@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Contracts
 {
-    public interface IRepositoryBase<T>
+    public interface IRepositoryBase<T>//methods defined in repositorybase !!
     {
         IQueryable<T> FindAll(bool trackChanges);
         IQueryable<T> FindByCondition(Expression<Func<T, bool>> 

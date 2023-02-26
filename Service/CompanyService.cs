@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using Entities.Models;
 using Service.Contracts;
+using Shared.DataTransferObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,22 +23,23 @@ namespace Service
             _repoMan= repoMan;  
         }
 
-        public IEnumerable<Company> GetAllCompanies(bool trackChanges)
+        IEnumerable<CompanyDTO> ICompanyService.GetAllCompanies(bool trackChanges)
         {
             try
             {
                 var companies = _repoMan.ICompanyRepo.GetAllCompanies(trackChanges);
-                return companies;
+                var companiesDto = companies.Select(c =>
+                new CompanyDTO(c.Id, c.Name ?? "", string.Join(' ', c.Address, c.Country)
+                )).ToList();
+                return companiesDto;
             }
             catch (Exception ex)
             {
 
-                _logMan.LogError($"noe er feil i {nameof(GetAllCompanies)} " +
+                _logMan.LogError($"noe er feil i {nameof(ICompanyService.GetAllCompanies)} " +
                     $"service method: {ex}");
                 throw;
             }
         }
-
-      
     }
 }
