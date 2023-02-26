@@ -1,4 +1,5 @@
-﻿using Contracts;
+﻿using AutoMapper;
+using Contracts;
 using Service.Contracts;
 using System;
 using System.Collections.Generic;
@@ -13,13 +14,14 @@ namespace Service
         private readonly Lazy<ICompanyService> _companyService;
         private readonly Lazy<IEmployeeService> _employeeService;
 
-        public ServiceManager(IRepositoryManager repoMan, ILoggerManager logMan)
+        public ServiceManager(IRepositoryManager repoMan, ILoggerManager logMan, 
+            IMapper mapper)
         {
             _companyService = new Lazy<ICompanyService>(() => 
-            new CompanyService(repoMan, logMan));
+            new CompanyService(repoMan, logMan, mapper));
 
             _employeeService = new Lazy<IEmployeeService>(() => 
-            new EmployeeService(repoMan, logMan));
+            new EmployeeService(repoMan, logMan, mapper));
         }
 
         public ICompanyService CompanyService => _companyService.Value;

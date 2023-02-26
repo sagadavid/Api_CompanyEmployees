@@ -1,4 +1,5 @@
-﻿using Contracts;
+﻿using AutoMapper;
+using Contracts;
 using Entities.Models;
 using Service.Contracts;
 using Shared.DataTransferObjects;
@@ -16,11 +17,14 @@ namespace Service
         //from each user repository class (CompanyRepository or EmployeeRepository)
         private readonly IRepositoryManager _repoMan;
         private readonly ILoggerManager _logMan;
+        private readonly IMapper _mapper;
 
-        public CompanyService(IRepositoryManager repoMan, ILoggerManager logMan) 
+        public CompanyService(IRepositoryManager repoMan, ILoggerManager logMan,
+            IMapper mapper) 
         {
             _logMan= logMan;
-            _repoMan= repoMan;  
+            _repoMan= repoMan;
+            _mapper= mapper;
         }
 
         IEnumerable<CompanyDTO> ICompanyService.GetAllCompanies(bool trackChanges)
@@ -28,10 +32,15 @@ namespace Service
             try
             {
                 var companies = _repoMan.ICompanyRepo.GetAllCompanies(trackChanges);
-                var companiesDto = companies.Select(c =>
-                new CompanyDTO(c.Id, c.Name ?? "", string.Join(' ', c.Address, c.Country)
-                )).ToList();
-                return companiesDto;
+                
+                //var companiesDto = companies.Select(c =>
+                //new CompanyDTO(c.Id, c.Name ?? "", string.Join(' ', c.Address, c.Country)
+                //)).ToList();
+
+                ////instead of manual mapping as above, use imapper, below
+                var companiesDTO=_mapper.Map<IEnumerable<CompanyDTO>>(companies);
+
+                return companiesDTO;
             }
             catch (Exception ex)
             {
