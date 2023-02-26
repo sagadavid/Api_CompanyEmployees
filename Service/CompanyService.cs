@@ -29,26 +29,27 @@ namespace Service
 
         IEnumerable<CompanyDTO> ICompanyService.GetAllCompanies(bool trackChanges)
         {
-            try
-            {
+           /*no need for try-catch, after error hanler middleware added*/
+           // try
+            //{
                 var companies = _repoMan.ICompanyRepo.GetAllCompanies(trackChanges);
                 
-                //var companiesDto = companies.Select(c =>
-                //new CompanyDTO(c.Id, c.Name ?? "", string.Join(' ', c.Address, c.Country)
-                //)).ToList();
+                ////var companiesDto = companies.Select(c =>
+                ////new CompanyDTO(c.Id, c.Name ?? "", string.Join(' ', c.Address, c.Country)
+                ////)).ToList();
 
                 ////instead of manual mapping as above, use imapper, below
                 var companiesDTO=_mapper.Map<IEnumerable<CompanyDTO>>(companies);
 
                 return companiesDTO;
-            }
-            catch (Exception ex)
-            {
+            //}
+            //catch (Exception ex)
+            //{
 
-                _logMan.LogError($"noe er feil i {nameof(ICompanyService.GetAllCompanies)} " +
-                    $"service method: {ex}");
-                throw;
-            }
+            //    _logMan.LogError($"noe er feil i {nameof(ICompanyService.GetAllCompanies)} " +
+            //        $"service method: {ex}");
+            //    throw;
+            //}
         }
     }
 }

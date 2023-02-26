@@ -15,15 +15,20 @@ namespace CompanyEmployees.Presentation.Controllers
         [HttpGet]
         public IActionResult GetCompanies()
         {
-            try
-            {
-                var companies = _service.CompanyService.GetAllCompanies(trackChanges: false);
-                return Ok(companies);
-            }
-            catch 
-            {
-                return StatusCode(500, "internal server error");
-            }
+            /*no need for try-catch, after error hanler middleware added*/
+            //try
+            //{
+
+            /*check if error handler middleware is working*/
+            //throw new Exception("Exception");
+
+            var companies = _service.CompanyService.GetAllCompanies(trackChanges: false);
+            return Ok(companies);
+            //}
+            //catch 
+            //{
+            //    return StatusCode(500, "internal server error");
+            //}
         
         }
 

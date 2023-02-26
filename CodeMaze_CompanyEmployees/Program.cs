@@ -1,4 +1,5 @@
 using CodeMaze_CompanyEmployees.Extensions;
+using Contracts;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -40,11 +41,22 @@ builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
 
+/*It is important to know that we have to extract the ILoggerManager service 
+ * after the var app = builder.Build() code line because the Build method builds 
+ * the WebApplication and registers all the services added with IOC.*/
+
+var logger = app.Services.GetRequiredService<ILoggerManager>();
+app.ConfigureExceptionHandler(logger);
+
 // Configure the HTTP request pipeline.
 
-if (app.Environment.IsDevelopment())
-    app.UseDeveloperExceptionPage();
-else
+//app.Environment.IsDevelopment() interferes with our error handler middleware.
+//if (app.Environment.IsDevelopment())
+//    app.UseDeveloperExceptionPage();
+//else
+//    app.UseHsts();
+
+if (app.Environment.IsProduction())
     app.UseHsts();
 
 app.UseHttpsRedirection();
@@ -54,8 +66,7 @@ app.UseStaticFiles();//enable static files for the request
 app.UseForwardedHeaders
     (new ForwardedHeadersOptions
 { 
-ForwardedHeaders=
-ForwardedHeaders.All//headers matching,
+ForwardedHeaders=ForwardedHeaders.All//headers matching,
                     //request vs proxy
 });
 
