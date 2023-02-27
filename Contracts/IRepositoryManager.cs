@@ -8,8 +8,8 @@ namespace Contracts
 {
     public interface IRepositoryManager
     {
-        ICompanyRepository ICompanyRepo { get; }
-        IEmployeeRepository IEmployeeRepo { get; }
+        ICompanyRepository CompanyRepo { get; }
+        IEmployeeRepository EmployeeRepo { get; }
         void Save();
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Contracts;
+using Entities.Exceptions;
 using Entities.Models;
 using Service.Contracts;
 using Shared.DataTransferObjects;
@@ -27,12 +28,24 @@ namespace Service
             _mapper= mapper;
         }
 
+        public CompanyDTO GetCompanyById(Guid id, bool trackChanges)
+        {
+            var company = _repoMan.CompanyRepo.GetCompanyById(id, trackChanges);
+            //null check here
+            if (company is null) 
+                throw new CompanyNotFoundException(id);
+
+            //we have company but return type is companydto, map company for dto
+           var companyDto = _mapper.Map<CompanyDTO>(company);
+            return companyDto;
+        }
+
         IEnumerable<CompanyDTO> ICompanyService.GetAllCompanies(bool trackChanges)
         {
            /*no need for try-catch, after error hanler middleware added*/
            // try
             //{
-                var companies = _repoMan.ICompanyRepo.GetAllCompanies(trackChanges);
+                var companies = _repoMan.CompanyRepo.GetAllCompanies(trackChanges);
                 
                 ////var companiesDto = companies.Select(c =>
                 ////new CompanyDTO(c.Id, c.Name ?? "", string.Join(' ', c.Address, c.Country)

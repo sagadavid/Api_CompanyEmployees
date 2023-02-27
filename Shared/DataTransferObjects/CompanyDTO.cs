@@ -20,7 +20,7 @@ This is the exact reason why we are using records for our DTOs.
     from the Company class. Furthermore, we are not using validation attributes in 
     this record, because we are going to use this record only to return a response 
     to the client. Therefore, validation attributes are not required.*/
-    public record CompanyDTO(Guid id, string Name, string FullAddress);
+    public record CompanyDTO(Guid Id, string Name, string FullAddress);
 
     /*So, the first thing we have to do is to add the reference from the 
      * Shared project to the Service.Contracts project, and remove the

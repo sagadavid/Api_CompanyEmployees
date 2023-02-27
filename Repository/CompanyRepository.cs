@@ -16,6 +16,9 @@ namespace Repository
         public IEnumerable<Company> GetAllCompanies(bool trackChanges)=>
             FindAll(trackChanges)//we defined findall method in repositorybase class
             .OrderBy(c=>c.Name).ToList();
-        
+
+        public Company GetCompanyById(Guid companyId, bool trackChanges) => 
+            FindByCondition(c => c.Id.Equals(companyId), trackChanges)
+            .SingleOrDefault();
     }
 }

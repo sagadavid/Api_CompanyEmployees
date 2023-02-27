@@ -32,5 +32,13 @@ namespace CompanyEmployees.Presentation.Controllers
         
         }
 
+        [HttpGet("id:guid")]
+        public IActionResult GetCompanyById(Guid companyId)
+        { 
+            var company = _service.CompanyService.GetCompanyById(companyId, trackChanges: false);
+
+            return Ok(company);
+        }
+
     }
 }
