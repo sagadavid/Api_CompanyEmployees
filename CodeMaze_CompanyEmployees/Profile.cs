@@ -9,6 +9,7 @@ namespace CodeMaze_CompanyEmployees
         public MappingProfile()
         {
             CreateMap<Company,CompanyDTO>()
+                
                 ////exception.. happens because AutoMapper is not able to find the specific 
                 ///FullAddress property as we specified in the MappingProfile class.
                 
@@ -18,13 +19,17 @@ namespace CodeMaze_CompanyEmployees
                 ////we are not using the ForMember method but the ForCtorParam method
                 ///to specify the name of the parameter in the constructor that 
                 ///AutoMapper needs to map to.
+
                 .ForCtorParam
                     ("FullAddress",
                         opt => opt.MapFrom(x => string.Join
                         (' ', x.Address, x.Country)));
+            
             //any misspelling cause exception:
             //AutoMapper.AutoMapperConfigurationException: CompanyDTO does not have a matching constructor with a parameter named 'FullAdress'.
             //Shared.DataTransferObjects.CompanyDTO.When mapping to records, consider excluding non-public constructors.
+            
+            CreateMap<Employee, EmployeeDto>();
         }
     }
 }

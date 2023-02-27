@@ -8,9 +8,9 @@ namespace CompanyEmployees.Presentation.Controllers
     [ApiController]
     public class CompaniesController : ControllerBase
     {
-        private IServiceManager _service;
+        private IServiceManager _serviceManger;
 
-        public CompaniesController(IServiceManager service)=> _service=service;
+        public CompaniesController(IServiceManager service)=> _serviceManger=service;
 
         [HttpGet]
         public IActionResult GetCompanies()
@@ -22,7 +22,7 @@ namespace CompanyEmployees.Presentation.Controllers
             /*check if error handler middleware is working*/
             //throw new Exception("Exception");
 
-            var companies = _service.CompanyService.GetAllCompanies(trackChanges: false);
+            var companies = _serviceManger.CompanyService.GetAllCompanies(trackChanges: false);
             return Ok(companies);
             //}
             //catch 
@@ -35,7 +35,7 @@ namespace CompanyEmployees.Presentation.Controllers
         [HttpGet("id:guid")]
         public IActionResult GetCompanyById(Guid companyId)
         { 
-            var company = _service.CompanyService.GetCompanyById(companyId, trackChanges: false);
+            var company = _serviceManger.CompanyService.GetCompanyById(companyId, trackChanges: false);
 
             return Ok(company);
         }
