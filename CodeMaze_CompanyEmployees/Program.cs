@@ -42,6 +42,7 @@ builder.Services.AddControllers(config => {
     config.ReturnHttpNotAcceptable = true;/*tells the server that if the client tries to negotiate for the media type the server doesn’t support, it should return the 406 Not Acceptable status code.
                                            * This will make our application more restrictive and force the API consumer to request only the types the server supports. The 406 status code is created for this purpose.*/
 }).AddXmlDataContractSerializerFormatters()
+.AddCustomCSVFormatter()//to get custom formatted response.. formatcsv()... postman get header accept text/csv
     .AddApplicationPart(typeof(CompanyEmployees.Presentation.AssemblyReference).Assembly);
 
 builder.Services.AddAutoMapper(typeof(Program));
