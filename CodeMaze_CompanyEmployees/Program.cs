@@ -34,10 +34,16 @@ builder.Services.ConfigureSqlContext(builder.Configuration);
      * of the controllers inside of the Presentation project and configure 
      * them with the framework. They are going to be treated the same as if 
      * they were defined conventionally.*/
-builder.Services.AddControllers()//allows registering controller
+builder.Services.AddControllers(config => {
+    /*A server does not explicitly specify where it formats a response to JSON. 
+     * But you can override it by changing configuration options through the Add Controllers method.
+     we must tell a server to respect the Accept header. After that, we just add the AddXmlDataContractSerializerFormatters method to support XML formatters.*/
+    config.RespectBrowserAcceptHeader = true;
+}).AddXmlDataContractSerializerFormatters()
     .AddApplicationPart(typeof(CompanyEmployees.Presentation.AssemblyReference).Assembly);
 
 builder.Services.AddAutoMapper(typeof(Program));
+
 
 var app = builder.Build();
 

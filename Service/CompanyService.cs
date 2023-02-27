@@ -28,7 +28,7 @@ namespace Service
             _mapper= mapper;
         }
 
-        public CompanyDTO GetCompanyById(Guid id, bool trackChanges)
+        public CompanyDto GetCompanyById(Guid id, bool trackChanges)
         {
             var company = _repoMan.CompanyRepo.GetCompanyById(id, trackChanges);
             //null check here
@@ -36,11 +36,11 @@ namespace Service
                 throw new CompanyNotFoundException(id);
 
             //we have company but return type is companydto, map company for dto
-           var companyDto = _mapper.Map<CompanyDTO>(company);
+           var companyDto = _mapper.Map<CompanyDto>(company);
             return companyDto;
         }
 
-        IEnumerable<CompanyDTO> ICompanyService.GetAllCompanies(bool trackChanges)
+        IEnumerable<CompanyDto> ICompanyService.GetAllCompanies(bool trackChanges)
         {
            /*no need for try-catch, after error hanler middleware added*/
            // try
@@ -52,7 +52,7 @@ namespace Service
                 ////)).ToList();
 
                 ////instead of manual mapping as above, use imapper, below
-                var companiesDTO=_mapper.Map<IEnumerable<CompanyDTO>>(companies);
+                var companiesDTO=_mapper.Map<IEnumerable<CompanyDto>>(companies);
 
                 return companiesDTO;
             //}

@@ -8,21 +8,19 @@ namespace CodeMaze_CompanyEmployees
     {
         public MappingProfile()
         {
-            CreateMap<Company,CompanyDTO>()
+            CreateMap<Company,CompanyDto>()
                 
                 ////exception.. happens because AutoMapper is not able to find the specific 
-                ///FullAddress property as we specified in the MappingProfile class.
+                ////FullAddress property as we specified in the MappingProfile class.
                 
-                //.ForMember
-                //(c => c.FullAddress,
+                .ForMember(c => c.FullAddress,////preferred to get xml response
 
-                ////we are not using the ForMember method but the ForCtorParam method
-                ///to specify the name of the parameter in the constructor that 
-                ///AutoMapper needs to map to.
 
-                .ForCtorParam
-                    ("FullAddress",
-                        opt => opt.MapFrom(x => string.Join
+
+              //.ForCtorParam("FullAddress",////we are not using the ForMember method but the ForCtorParam method
+                                            ///to specify the name of the parameter in the constructor that 
+                                            ///AutoMapper needs to map to.
+                    opt => opt.MapFrom(x => string.Join
                         (' ', x.Address, x.Country)));
             
             //any misspelling cause exception:
