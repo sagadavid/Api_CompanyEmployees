@@ -25,6 +25,23 @@ namespace Service
             _mapper = mapper;
         }
 
+        public EmployeeDto GetEmployee(Guid companyId, Guid id, bool trackChanges)
+        {
+            var company = _repoMan.CompanyRepo.GetCompanyById(companyId, trackChanges);
+
+            if (company == null) throw new CompanyNotFoundException(companyId);
+
+            //select employee depending company id
+            var employeeFromDb = _repoMan.EmployeeRepo.GetEmployee(companyId, id, trackChanges);
+            if (employeeFromDb == null) throw new EmployeeNotFoundException(id);
+
+            //map each employee to enumetable dto
+            var employeeDto = _mapper.Map<EmployeeDto>(employeeFromDb);
+
+            return employeeDto;
+
+        }
+
         public IEnumerable<EmployeeDto> GetEmployees(Guid companyId, bool trackChanges)
         {
             var company = _repoMan.CompanyRepo.GetCompanyById(companyId, trackChanges);

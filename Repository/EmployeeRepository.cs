@@ -2,6 +2,7 @@
 using Entities.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +17,13 @@ namespace Repository
         public IEnumerable<Employee> GetEmployees(Guid companyId, bool trackChanges)=>
             FindByCondition(e=>e.CompanyId.Equals(companyId),trackChanges)
             .OrderBy(e=>e.Name).ToList();
-        
+
+        public Employee GetEmployee(Guid companyId, Guid id, bool trackChanges)=>
+        FindByCondition(e => e.CompanyId
+            .Equals(companyId) && e.Id.Equals(id), trackChanges)
+            .SingleOrDefault();
+
+
+
     }
 }
