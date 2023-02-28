@@ -28,6 +28,7 @@ namespace CodeMaze_CompanyEmployees
             //Shared.DataTransferObjects.CompanyDTO.When mapping to records, consider excluding non-public constructors.
             
             CreateMap<Employee, EmployeeDto>();
+            CreateMap<CompanyForCreationDto, Company>();
         }
     }
 }

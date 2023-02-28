@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
+using Shared.DataTransferObjects;
 
 namespace CompanyEmployees.Presentation.Controllers
 {
@@ -32,12 +33,23 @@ namespace CompanyEmployees.Presentation.Controllers
         
         }
 
-        [HttpGet("id:guid")]
-        public IActionResult GetCompanyById(Guid companyId)
+        [HttpGet("id:guid", Name ="GetCompanyById")]
+        public IActionResult GetCompany(Guid companyId)
         { 
             var company = _serviceManger.CompanyService.GetCompanyById(companyId, trackChanges: false);
 
             return Ok(company);
+        }
+
+        [HttpPost]
+        public IActionResult CreateCompany([FromBody] CompanyForCreationDto company)
+        {
+            if (company is null)
+                return BadRequest("CompanyForCreationDto object is null");
+            var createdCompany = _serviceManger.CompanyService.CreateCompany(company);
+            return CreatedAtRoute("GetCompanyById", new { id = createdCompany.Id }, createdCompany);
+            ////here, createdatroute requires name decoaration of get api, 
+            ///if it is misspelled post request doesnt turn with body on postman
         }
 
     }

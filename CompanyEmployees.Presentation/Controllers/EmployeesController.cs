@@ -24,7 +24,7 @@ namespace Presentation.Controllers
             return Ok(employess);
             /*we have the companyId parameter in our action and this parameter will be 
              * mapped from the main route. For that reason, we didn’t place it in the 
-             * [HttpGet] attribute as we did with the GetCompanyById action.*/
+             * [HttpGet] attribute as we did with the GetCompany action.*/
         }
 
         [HttpGet("{id:guid}")]

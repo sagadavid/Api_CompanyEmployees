@@ -13,6 +13,8 @@ namespace Repository
         public CompanyRepository(RepositoryContext repositoryContext):
             base(repositoryContext) {}
 
+        public void CreateCompany(Company company) => Create(company);
+
         public IEnumerable<Company> GetAllCompanies(bool trackChanges)=>
             FindAll(trackChanges)//we defined findall method in repositorybase class
             .OrderBy(c=>c.Name).ToList();

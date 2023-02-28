@@ -16,21 +16,37 @@ namespace Service
     {
         //using IRepositoryManager to access the repository methods
         //from each user repository class (CompanyRepository or EmployeeRepository)
-        private readonly IRepositoryManager _repoMan;
-        private readonly ILoggerManager _logMan;
+        private readonly IRepositoryManager _repositoryManager;
+        private readonly ILoggerManager _logManager;
         private readonly IMapper _mapper;
 
         public CompanyService(IRepositoryManager repoMan, ILoggerManager logMan,
             IMapper mapper) 
         {
-            _logMan= logMan;
-            _repoMan= repoMan;
+            _logManager= logMan;
+            _repositoryManager= repoMan;
             _mapper= mapper;
+        }
+
+        public CompanyDto CreateCompany(CompanyForCreationDto company)
+
+        {
+            //method input parameter, to be mapped, created, saved, returned
+            var companyEntity = _mapper.Map<Company>(company);
+
+            _repositoryManager.CompanyRepo.CreateCompany(companyEntity);
+
+            _repositoryManager.Save();
+
+            var companyToReturn = _mapper.Map<CompanyDto>(companyEntity);
+
+            return companyToReturn;
+
         }
 
         public CompanyDto GetCompanyById(Guid id, bool trackChanges)
         {
-            var company = _repoMan.CompanyRepo.GetCompanyById(id, trackChanges);
+            var company = _repositoryManager.CompanyRepo.GetCompanyById(id, trackChanges);
             //null check here
             if (company is null) 
                 throw new CompanyNotFoundException(id);
@@ -45,7 +61,7 @@ namespace Service
            /*no need for try-catch, after error hanler middleware added*/
            // try
             //{
-                var companies = _repoMan.CompanyRepo.GetAllCompanies(trackChanges);
+                var companies = _repositoryManager.CompanyRepo.GetAllCompanies(trackChanges);
                 
                 ////var companiesDto = companies.Select(c =>
                 ////new CompanyDTO(c.Id, c.Name ?? "", string.Join(' ', c.Address, c.Country)
@@ -59,7 +75,7 @@ namespace Service
             //catch (Exception ex)
             //{
 
-            //    _logMan.LogError($"noe er feil i {nameof(ICompanyService.GetAllCompanies)} " +
+            //    _logManager.LogError($"noe er feil i {nameof(ICompanyService.GetAllCompanies)} " +
             //        $"service method: {ex}");
             //    throw;
             //}
