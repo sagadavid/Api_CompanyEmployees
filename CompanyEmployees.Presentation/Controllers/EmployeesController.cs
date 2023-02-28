@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
+using Shared.DataTransferObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,15 +28,37 @@ namespace Presentation.Controllers
              * [HttpGet] attribute as we did with the GetCompany action.*/
         }
 
-        [HttpGet("{id:guid}")]
+        [HttpGet("{id:guid}", Name = "GetEmployeeForCompany")]//we provide parameters for post/createdatroute 
 
         public IActionResult GetEmployeeForCompany(Guid companyId, Guid id)
 
         {
-
             var employee = _serviceManager.EmployeeService.GetEmployee(companyId, id, trackChanges: false);
             return Ok(employee);
-
         }
+
+        [HttpPost]
+        public IActionResult CreateEmployeeForCompany
+            (Guid companyId, [FromBody] EmployeeForCreationDto employee)
+        {
+            if (employee is null)
+                return BadRequest("EmployeeForCreationDto object is null");
+            var employeeToReturn =
+            _serviceManager.EmployeeService.CreateEmployeeForCompany
+                    (companyId, employee, trackChanges: false);
+
+            return CreatedAtRoute("GetEmployeeForCompany", 
+                new {companyId, id = employeeToReturn.Id},employeeToReturn);}
+        /*
+         postman post : https://localhost:7165/api/companies/0eec53d0-6091-40d6-b994-08db19cfa35a/employees
+        json row body at post : {"name":"david saga", "age":"45","position":"team ansvarlig" }
+        postman get : https://localhost:7165/api/companies/0eec53d0-6091-40d6-b994-08db19cfa35a/employees/f978edfc-a8e1-4506-bef0-08db19e133e2
+        postman get response body : {
+    "id": "f978edfc-a8e1-4506-bef0-08db19e133e2",
+    "name": "david saga",
+    "age": 45,
+    "position": "team ansvarlig"
+}
+         */
     }
 }
