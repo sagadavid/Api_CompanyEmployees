@@ -1,6 +1,7 @@
 using CodeMaze_CompanyEmployees.Extensions;
 using Contracts;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using NLog;
@@ -26,6 +27,10 @@ builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
 
 builder.Services.ConfigureSqlContext(builder.Configuration);
+
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{options.SuppressModelStateInvalidFilter = true;});//enable custom responses,
+                                                   //fx on createataction for post api
 
 /*without modifying addcontrollers, our API wouldn’t work
      * -because we deleted controller folder and files and presented presentation project-, 

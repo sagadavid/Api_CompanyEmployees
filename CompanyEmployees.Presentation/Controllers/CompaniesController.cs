@@ -50,6 +50,7 @@ namespace CompanyEmployees.Presentation.Controllers
             return CreatedAtRoute("GetCompanyById", new { id = createdCompany.Id }, createdCompany);
             ////here, createdatroute requires name decoaration of get api, 
             ///if it is misspelled post request doesnt turn with body on postman
+            ///response body contains location header au
         }
 
     }
