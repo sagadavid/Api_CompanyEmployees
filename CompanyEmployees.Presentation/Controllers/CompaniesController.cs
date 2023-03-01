@@ -53,5 +53,25 @@ namespace CompanyEmployees.Presentation.Controllers
             ///response body contains location header au
         }
 
+        [HttpGet("collection/({ids})", Name = "CompanyCollection")]
+        public IActionResult GetCompanyCollection(IEnumerable<Guid> ids)
+        {
+            var companies = _serviceManger.CompanyService.GetByIds(ids, trackChanges: false);
+            return Ok(companies);
+        }
+
+        [HttpPost("collection")]
+        public IActionResult CreateCompanyCollection
+            ([FromBody] IEnumerable<CompanyForCreationDto> companyCollection)
+        {
+            var result =
+            _serviceManger.CompanyService.CreateCompanyCollection(companyCollection);
+            return CreatedAtRoute
+                ("CompanyCollection", new { result.ids },result.companies);
+            /*postman post : https://localhost:7165/api/companies/collection
+             response body location : https://localhost:7165/api/companies/collection/(5a706767-9c19-4c21-3a80-08db1a7422b6,df651ec2-0615-4be0-3a81-08db1a7422b6)
+             */
+        }
+
     }
 }
