@@ -69,5 +69,24 @@ namespace Service
             var employeeToReturn = _mapper.Map<EmployeeDto>(employeeEntity);
             return employeeToReturn;
         }
+
+        public void DeleteEmployeeForCompany(Guid companyId, Guid id, bool trackChanges)
+        {
+            var company =_repositoryManager.CompanyRepo
+                .GetCompanyById(companyId, trackChanges);
+            if (company is null)
+                throw new CompanyNotFoundException(companyId);
+            ////If company exists, we fetch the employee for that company,
+            ///that means, company is companyId actually
+            
+            var employeeForCompany = _repositoryManager.EmployeeRepo
+                .GetEmployee(companyId, id, trackChanges);
+
+            ////company and employee id intersects, gives us employee for company
+            if (employeeForCompany is null)
+                throw new EmployeeNotFoundException(id);
+            _repositoryManager.EmployeeRepo.DeleteEmployee(employeeForCompany);
+            _repositoryManager.Save();
+        }
     }
 }

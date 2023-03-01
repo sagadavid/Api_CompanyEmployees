@@ -60,6 +60,23 @@ using System.Reflection;
 
             return Task.CompletedTask;
 
+            /*get collection depending on id array--after model binding above
+             * postman get : https://localhost:7165/api/companies/collection/(3b2d4e75-7ecc-4630-6142-08db1a7c0f35,550057df-0631-439c-6143-08db1a7c0f35)
+             response body: 
+            [
+    {
+        "id": "3b2d4e75-7ecc-4630-6142-08db1a7c0f35",
+        "name": "company collection 3",
+        "fullAddress": "address 123 britania"
+    },
+    {
+        "id": "550057df-0631-439c-6143-08db1a7c0f35",
+        "name": "company collection 4",
+        "fullAddress": "address 456 englandia"
+    }
+]
+             */
+
         }
     }
 }
