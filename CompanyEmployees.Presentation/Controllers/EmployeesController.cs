@@ -79,6 +79,26 @@ namespace Presentation.Controllers
              */
         }
 
+        [HttpPut("{id:guid}")]//api/companies/{companyId}/employees/{id}
+        public IActionResult UpdateEmployeeForCompany
+                    (Guid companyId,
+                    Guid id,
+                    [FromBody] EmployeeForUpdateDto employee)
+        {
+            if (employee is null) return BadRequest("EmployeeForUpdateDto object is null");
+
+            _serviceManager.EmployeeService.UpdateEmployeeForCompany
+                (companyId, id, employee, compTrackChanges: false, empTrackChanges: true);
+
+            return NoContent();
+
+            /*
+             postman change property value in put/body, and then 
+            check the same url by get/body
+            https://localhost:7165/api/companies/3d490a70-94ce-4d15-9494-5248280c2ce3/employees/6543ec34-d129-4b73-113e-08db1b4adedf
+             */
+        }
+
 
     }
 }

@@ -24,7 +24,8 @@ namespace CompanyEmployees.Presentation.Controllers
             /*check if error handler middleware is working*/
             //throw new Exception("Exception");
 
-            var companies = _serviceManger.CompanyService.GetAllCompanies(trackChanges: false);
+            var companies = _serviceManger.CompanyService
+                .GetAllCompanies(trackChanges: false);
             return Ok(companies);
             //}
             //catch 
@@ -34,10 +35,11 @@ namespace CompanyEmployees.Presentation.Controllers
         
         }
 
-        [HttpGet("id:guid", Name ="GetCompanyById")]
+        [HttpGet("{companyId:guid}", Name ="GetCompanyById")]
         public IActionResult GetCompany(Guid companyId)
         { 
-            var company = _serviceManger.CompanyService.GetCompanyById(companyId, trackChanges: false);
+            var company = _serviceManger.CompanyService
+                .GetCompanyById(companyId, trackChanges: false);
 
             return Ok(company);
         }

@@ -2,6 +2,7 @@
 using Contracts;
 using Entities.Exceptions;
 using Entities.Models;
+using Microsoft.Extensions.Options;
 using Service.Contracts;
 using Shared.DataTransferObjects;
 using System;
@@ -88,5 +89,38 @@ namespace Service
             _repositoryManager.EmployeeRepo.DeleteEmployee(employeeForCompany);
             _repositoryManager.Save();
         }
+
+        public void UpdateEmployeeForCompany
+            (Guid companyId, 
+            Guid id, 
+            EmployeeForUpdateDto employeeForUpdate,
+            bool compTrackChanges, 
+            bool empTrackChanges)
+        {
+
+            var company = _repositoryManager.CompanyRepo
+                            .GetCompanyById(companyId, compTrackChanges);
+
+            if (company is null) throw new CompanyNotFoundException(companyId);
+
+            var employeeEntity = _repositoryManager.EmployeeRepo
+                            .GetEmployee(companyId, id, empTrackChanges);
+
+            if (employeeEntity is null) throw new EmployeeNotFoundException(id);
+
+            _mapper.Map(employeeForUpdate, employeeEntity);
+
+            _repositoryManager.Save();//we are mapping from the employeeForUpdate object
+                                      //(we will change just the age property in a request) to the
+                                      //employeeEntity — thus changing the state of the
+                                      //employeeEntity object to Modified.
+                                      //Because our entity has a modified state, it is enough to
+                                      //call the Save method without any additional update
+                                      //actions.As soon as we call the Save method, our entity
+                                      //is going to be updated in the database.
+
+        }
+
+
     }
 }
