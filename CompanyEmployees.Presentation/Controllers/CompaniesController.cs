@@ -75,5 +75,12 @@ namespace CompanyEmployees.Presentation.Controllers
              */
         }
 
+        [HttpDelete("{id:guid}")]
+        public IActionResult DeleteCompany(Guid id)
+        {
+            _serviceManger.CompanyService.DeleteCompany(id, trackChanges: false);
+            return NoContent();
+        }
+
     }
 }
