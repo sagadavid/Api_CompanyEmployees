@@ -96,6 +96,25 @@ namespace Presentation.Controllers
              postman change property value in put/body, and then 
             check the same url by get/body
             https://localhost:7165/api/companies/3d490a70-94ce-4d15-9494-5248280c2ce3/employees/6543ec34-d129-4b73-113e-08db1b4adedf
+             
+             We’ve changed only the Age property, but we have sent all the other properties 
+            with unchanged values as well. Therefore, Age is only updated in the database. 
+            But if we send the object with just the Age property, other properties will be 
+            set to their default values and the whole object will be updated — not just the 
+            Age column. That’s because the PUT is a request for a full update. This is very 
+            important to know.
+
+            The update action we just executed is a connected update 
+            (an update where we use the same context object to fetch the entity and to update it). 
+            But sometimes we can work with disconnected updates. This kind of update action uses 
+            different context objects to execute fetch and update actions or sometimes we can 
+            receive an object from a client with the Id property set as well, so we don’t have to 
+            fetch it from the database. In that situation, all we have to do is to inform EF Core to
+            track changes on that entity and to set its state to modified. We can do both actions 
+            with the Update method from our RepositoryBase class. So, you see, having that method 
+            is crucial as well.
+            One note, though. If we use the Update method from our repository, even if we change 
+            just the Age property, all properties will be updated in the database.
              */
         }
 
