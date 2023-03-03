@@ -12,7 +12,7 @@ namespace CompanyEmployees.Presentation.Controllers
     {
         private IServiceManager _serviceManger;
 
-        public CompaniesController(IServiceManager service)=> _serviceManger=service;
+        public CompaniesController(IServiceManager serviceManager)=> _serviceManger=serviceManager;
 
         [HttpGet]
         public IActionResult GetCompanies()
@@ -38,7 +38,8 @@ namespace CompanyEmployees.Presentation.Controllers
         [HttpGet("{companyId:guid}", Name ="GetCompanyById")]
         public IActionResult GetCompany(Guid companyId)
         { 
-            var company = _serviceManger.CompanyService
+            var company = 
+                _serviceManger.CompanyService
                 .GetCompanyById(companyId, trackChanges: false);
 
             return Ok(company);
@@ -80,8 +81,54 @@ namespace CompanyEmployees.Presentation.Controllers
         [HttpDelete("{id:guid}")]
         public IActionResult DeleteCompany(Guid id)
         {
-            _serviceManger.CompanyService.DeleteCompany(id, trackChanges: false);
+            _serviceManger.CompanyService
+                .DeleteCompany(id, trackChanges: false);
             return NoContent();
+        }
+
+        [HttpPut("{id:guid}")]
+        public IActionResult UpdateCompany
+            (Guid id, 
+            [FromBody] CompanyForUpdateDto company)
+        {
+            if (company is null) return BadRequest("CompanyForUpdateDto object is null");
+
+            _serviceManger.CompanyService
+                .UpdateCompany(id, company, trackChanges: true);
+
+            return NoContent();
+            /*company updates, employee ADDS !! check comment in the dto..
+             * postman put 
+             * https://localhost:7165/api/companies/3d490a70-94ce-4d15-9494-5248280c2ce3
+             * put body
+             * {
+                    "name":"company 1",
+                    "address": "312 Forest Avenue", 
+                    "country":"VA 22202 USA",
+                    "employees": [{
+                    "name" : "employee 1",
+                    "age": "77",
+                    "position":"owner"
+                        }]
+                }
+             * postman get 
+             * https://localhost:7165/api/companies/3d490a70-94ce-4d15-9494-5248280c2ce3/EMPLOYEES
+             * response body
+             * [
+                        {
+                            "id": "d8f7f7cb-283a-420b-fcf3-08db1bccd643",
+                            "name": "employee 1",
+                            "age": 77,
+                            "position": "owner"
+                        },
+                        {
+                            "id": "6543ec34-d129-4b73-113e-08db1b4adedf",
+                            "name": "hanri cahnged his age",
+                            "age": 34,
+                            "position": "leder"
+                        }
+                ]
+             */
         }
 
     }
