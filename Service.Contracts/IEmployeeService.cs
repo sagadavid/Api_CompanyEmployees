@@ -1,4 +1,5 @@
-﻿using Shared.DataTransferObjects;
+﻿using Entities.Models;
+using Shared.DataTransferObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,5 +33,18 @@ namespace Service.Contracts
             bool empTrackChanges);//We are doing that because we won't track changes
                                   //while fetching the company entity, but we will
                                   //track changes while fetching the employee.
+
+        (EmployeeForUpdateDto employeeToPatch, 
+        Employee employeeEntity) 
+                GetEmployeeForPatch
+                       (Guid companyId, 
+                        Guid id, 
+                        bool compTrackChanges, 
+                        bool empTrackChanges);
+        void SaveChangesForPatch
+            (EmployeeForUpdateDto employeeToPatch,
+            Employee employeeEntity);
+
+
     }
 }

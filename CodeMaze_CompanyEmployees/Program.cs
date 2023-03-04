@@ -4,8 +4,11 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using NLog;
 using Repository;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,12 +49,23 @@ builder.Services.AddControllers(config => {
     config.RespectBrowserAcceptHeader = true;
     config.ReturnHttpNotAcceptable = true;/*tells the server that if the client tries to negotiate for the media type the server doesn’t support, it should return the 406 Not Acceptable status code.
                                            * This will make our application more restrictive and force the API consumer to request only the types the server supports. The 406 status code is created for this purpose.*/
-}).AddXmlDataContractSerializerFormatters()
-.AddCustomCSVFormatter()//to get custom formatted response.. formatcsv()... postman get header accept text/csv
-    .AddApplicationPart(typeof(CompanyEmployees.Presentation.AssemblyReference).Assembly);
+    
+    config.InputFormatters.Insert(0, GetJsonPatchInputFormatter());//We are placing our JsonPatchInputFormatter at the index 0 in the InputFormatters list.
+})
+            .AddXmlDataContractSerializerFormatters()
+            .AddCustomCSVFormatter()//to get custom formatted response.. formatcsv()... postman get header accept text/csv
+            .AddApplicationPart(typeof(CompanyEmployees.Presentation.AssemblyReference).Assembly);
 
 builder.Services.AddAutoMapper(typeof(Program));
 
+NewtonsoftJsonPatchInputFormatter GetJsonPatchInputFormatter() =>
+    new ServiceCollection().AddLogging().AddMvc()
+    .AddNewtonsoftJson().Services.BuildServiceProvider()
+    .GetRequiredService<IOptions<MvcOptions>>().Value.InputFormatters
+    .OfType<NewtonsoftJsonPatchInputFormatter>().First();/*
+                                                          * By adding a method like this in the Program class, we are creating a local function. 
+                                                          * This function configures support for JSON Patch using Newtonsoft.
+                                                          * Json while leaving the other formatters unchanged.*/
 
 var app = builder.Build();
 

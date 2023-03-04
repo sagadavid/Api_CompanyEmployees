@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects;
 using System;
@@ -12,9 +13,11 @@ namespace Presentation.Controllers
     [Route("api/companies/{companyId}/employees")]
     public class EmployeesController : ControllerBase
     {
-        private readonly IServiceManager _serviceManager;
+        private readonly 
+            IServiceManager _serviceManager;
 
-        public EmployeesController(IServiceManager serviceManager) =>
+        public 
+            EmployeesController (IServiceManager serviceManager) =>
             _serviceManager = serviceManager;
 
         [HttpGet]
@@ -29,9 +32,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet("{id:guid}", Name = "GetEmployeeForCompany")]//we provide parameters for post/createdatroute 
-
         public IActionResult GetEmployeeForCompany(Guid companyId, Guid id)
-
         {
             var employee = _serviceManager.EmployeeService.GetEmployee(companyId, id, trackChanges: false);
             return Ok(employee);
@@ -61,7 +62,6 @@ namespace Presentation.Controllers
     "position": "team ansvarlig"
         }
          */
-
 
         [HttpDelete("{id:guid}")]
         public IActionResult DeleteEmployeeForCompany(Guid companyId, Guid id)
@@ -116,6 +116,35 @@ namespace Presentation.Controllers
             One note, though. If we use the Update method from our repository, even if we change 
             just the Age property, all properties will be updated in the database.
              */
+        }
+
+
+        [HttpPatch("{id:guid}")]
+            public IActionResult PartiallyUpdateEmployeeForCompany
+               (Guid companyId, 
+                Guid id, 
+                [FromBody] 
+                    JsonPatchDocument<EmployeeForUpdateDto> patchDoc)
+        {
+            if (patchDoc is null) 
+                return BadRequest("patchDoc object sent from client is null.");
+
+            var result = 
+                _serviceManager.EmployeeService
+                .GetEmployeeForPatch (companyId, 
+                                        id, 
+                                        compTrackChanges: false, 
+                                        empTrackChanges: true);
+
+            patchDoc.ApplyTo (result.employeeToPatch);
+
+            _serviceManager.EmployeeService
+                .SaveChangesForPatch
+                        (result.employeeToPatch,
+                         result.employeeEntity);
+
+            return NoContent();
+
         }
 
 
