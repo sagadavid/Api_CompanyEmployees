@@ -14,7 +14,8 @@ namespace Shared.DataTransferObjects
         [MaxLength(30, ErrorMessage = "Maximum length for the Name is 30 characters.")]
         string Name { get; init; }
 
-        [Required(ErrorMessage = "Age is a required field.")]
+        //[Required(ErrorMessage = "Age is a required field.")]//null value is accepted here.. use range
+        [Range(18, int.MaxValue, ErrorMessage ="required and least 18")]
         int Age { get; init; }
 
         [Required(ErrorMessage = "Position is a required field.")]

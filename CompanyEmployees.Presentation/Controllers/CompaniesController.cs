@@ -51,8 +51,8 @@ namespace CompanyEmployees.Presentation.Controllers
             if (company is null)
                 return BadRequest("CompanyForCreationDto object is null");
 
-            if (!ModelState.IsValid)
-                return UnprocessableEntity(ModelState);//now we get on invalid posting -->422 unprocessable entity..
+            //if (!ModelState.IsValid)
+            //    return UnprocessableEntity(ModelState);//now we get on invalid posting -->422 unprocessable entity..
 
             var createdCompany = _serviceManger.CompanyService.CreateCompany(company);
             return CreatedAtRoute("GetCompanyById", new { id = createdCompany.Id }, createdCompany);
