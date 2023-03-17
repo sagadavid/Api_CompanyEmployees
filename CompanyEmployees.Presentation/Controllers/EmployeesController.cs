@@ -90,6 +90,8 @@ namespace Presentation.Controllers
         {
             if (employee is null) return BadRequest("EmployeeForUpdateDto object is null");
 
+            if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
+
             _serviceManager.EmployeeService.UpdateEmployeeForCompany
                 (companyId, id, employee, compTrackChanges: false, empTrackChanges: true);
 
