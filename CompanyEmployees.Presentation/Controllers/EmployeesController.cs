@@ -44,6 +44,9 @@ namespace Presentation.Controllers
         {
             if (employee is null)
                 return BadRequest("EmployeeForCreationDto object is null");
+
+            if (!ModelState.IsValid)
+                return UnprocessableEntity(ModelState);//now we get on invalid posting -->422 unprocessable entity..
             var employeeToReturn =
             _serviceManager.EmployeeService.CreateEmployeeForCompany
                     (companyId, employee, trackChanges: false);
