@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace Contracts
 {
+    /*In asynchronous programming, we have three return types:
+    * Task<TResult>, for an async method that returns a value.
+    * Task, for an async method that does not return a value.
+    * void, which we can use for an event handler.
+    *      but we dont async in repobase class, to keep available for syncronous methods, sometimes async takes more time than sync*/
+
     public interface IRepositoryBase<T>//methods defined in repositorybase !!
     {
         IQueryable<T> FindAll(bool trackChanges);
