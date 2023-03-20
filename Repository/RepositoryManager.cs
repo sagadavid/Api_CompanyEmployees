@@ -52,6 +52,11 @@ namespace Repository
 
         public IEmployeeRepository EmployeeRepo => _employeeRepostitory.Value;
 
-        public void Save()=> _repositoryContext.SaveChanges();
+        //public void Save()=> _repositoryContext.SaveChanges();
+
+        //Because the SaveAsync() , ToListAsync()... methods are awaitable, we may use the await keyword;
+        //thus, our methods need to have the async keyword and Task as a return type. Using the await keyword is not mandatory, though.
+        public async Task SaveAsync() => await _repositoryContext.SaveChangesAsync();
+        
     }
 }
