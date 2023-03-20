@@ -57,7 +57,7 @@ namespace CompanyEmployees.Presentation.Controllers
         public IActionResult GetCompanyCollection
             ([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
         {
-            var companies = _serviceManger.CompanyService.GetByIds(ids, trackChanges: false);
+            var companies = _serviceManger.CompanyService.GetByIdsAsync(ids, trackChanges: false);
             return Ok(companies);
         }
 

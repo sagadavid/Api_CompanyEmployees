@@ -10,22 +10,22 @@ namespace Service.Contracts
 {
     public interface IEmployeeService
     {
-        IEnumerable<EmployeeDto> GetEmployees
+        Task <IEnumerable<EmployeeDto>> GetEmployeesAsync
             (Guid companyId, 
             bool trackChanges);
-        EmployeeDto GetEmployee
+        Task <EmployeeDto> GetEmployeeByIdAsync
             (Guid companyId, 
             Guid id, 
             bool trackChanges);
-        EmployeeDto CreateEmployeeForCompany
+        Task <EmployeeDto> CreateEmployeeForCompanyAsync
             (Guid companyId, 
             EmployeeForCreationDto employeeForCreation, 
             bool trackChanges);
-        void DeleteEmployeeForCompany
+        Task DeleteEmployeeForCompanyAsync
             (Guid companyId, 
             Guid id, 
             bool trackChanges);
-        void UpdateEmployeeForCompany
+        Task UpdateEmployeeForCompanyAsync
             (Guid companyId, 
             Guid id, 
             EmployeeForUpdateDto employeeForUpdate, 
@@ -34,14 +34,14 @@ namespace Service.Contracts
                                   //while fetching the company entity, but we will
                                   //track changes while fetching the employee.
 
-        (EmployeeForUpdateDto employeeToPatch, 
-        Employee employeeEntity) 
-                GetEmployeeForPatch
+        Task <(EmployeeForUpdateDto employeeToPatch, 
+        Employee employeeEntity)> 
+                GetEmployeeForPatchAsync
                        (Guid companyId, 
                         Guid id, 
                         bool compTrackChanges, 
                         bool empTrackChanges);
-        void SaveChangesForPatch
+        Task SaveChangesForPatchAsync
             (EmployeeForUpdateDto employeeToPatch,
             Employee employeeEntity);
 
