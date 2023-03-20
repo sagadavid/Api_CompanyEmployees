@@ -12,41 +12,32 @@ namespace CompanyEmployees.Presentation.Controllers
     {
         private IServiceManager _serviceManger;
 
-        public CompaniesController(IServiceManager serviceManager)=> _serviceManger=serviceManager;
+        public CompaniesController(IServiceManager serviceManager) => _serviceManger = serviceManager;
 
         [HttpGet]
-        public IActionResult GetCompanies()
+        public async Task<IActionResult> GetCompanies()//when we async modify, dont need to add to method names in controller
         {
             /*no need for try-catch, after error hanler middleware added*/
-            //try
-            //{
-
-            /*check if error handler middleware is working*/
+            //try {/*check if error handler middleware is working*/
             //throw new Exception("Exception");
 
-            var companies = _serviceManger.CompanyService
-                .GetAllCompanies(trackChanges: false);
+            var companies = await _serviceManger.CompanyService
+                .GetAllCompaniesAsync(trackChanges: false);
             return Ok(companies);
-            //}
-            //catch 
-            //{
-            //    return StatusCode(500, "internal server error");
-            //}
-        
+            //}//catch { return StatusCode(500, "internal server error");}
+
         }
 
-        [HttpGet("{companyId:guid}", Name ="GetCompanyById")]
-        public IActionResult GetCompany(Guid companyId)
-        { 
-            var company = 
-                _serviceManger.CompanyService
-                .GetCompanyById(companyId, trackChanges: false);
-
+        [HttpGet("{companyId:guid}", Name = "GetCompanyById")]
+        public async Task<IActionResult> GetCompany(Guid companyId)
+        {
+            var company =await _serviceManger.CompanyService
+                .GetCompanyByIdAsync(companyId, trackChanges: false);
             return Ok(company);
         }
 
         [HttpPost]
-        public IActionResult CreateCompany([FromBody] CompanyForCreationDto company)
+        public async Task<IActionResult> CreateCompany([FromBody] CompanyForCreationDto company)
         {
             if (company is null)
                 return BadRequest("CompanyForCreationDto object is null");
@@ -54,8 +45,9 @@ namespace CompanyEmployees.Presentation.Controllers
             //if (!ModelState.IsValid)
             //    return UnprocessableEntity(ModelState);//now we get on invalid posting -->422 unprocessable entity..
 
-            var createdCompany = _serviceManger.CompanyService.CreateCompany(company);
+            var createdCompany = await _serviceManger.CompanyService.CreateCompanyAsync(company);
             return CreatedAtRoute("GetCompanyById", new { id = createdCompany.Id }, createdCompany);
+            
             ////here, createdatroute requires name decoaration of get api, 
             ///if it is misspelled post request doesnt turn with body on postman
             ///response body contains location header au
@@ -63,44 +55,44 @@ namespace CompanyEmployees.Presentation.Controllers
 
         [HttpGet("collection/({ids})", Name = "CompanyCollection")]
         public IActionResult GetCompanyCollection
-            ([ModelBinder(BinderType =typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
+            ([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
         {
             var companies = _serviceManger.CompanyService.GetByIds(ids, trackChanges: false);
             return Ok(companies);
         }
 
         [HttpPost("collection")]
-        public IActionResult CreateCompanyCollection
+        public async Task<IActionResult> CreateCompanyCollection
             ([FromBody] IEnumerable<CompanyForCreationDto> companyCollection)
         {
-            var result =
-            _serviceManger.CompanyService.CreateCompanyCollection(companyCollection);
+            var result =await _serviceManger.CompanyService
+                .CreateCompanyCollectionAsync(companyCollection);
             return CreatedAtRoute
-                ("CompanyCollection", new { result.ids },result.companies);
+                ("CompanyCollection", new { result.ids }, result.companies);
+
             /*postman post : https://localhost:7165/api/companies/collection
              response body location : https://localhost:7165/api/companies/collection/(5a706767-9c19-4c21-3a80-08db1a7422b6,df651ec2-0615-4be0-3a81-08db1a7422b6)
              */
         }
 
         [HttpDelete("{id:guid}")]
-        public IActionResult DeleteCompany(Guid id)
+        public async Task<IActionResult> DeleteCompany(Guid id)
         {
-            _serviceManger.CompanyService
-                .DeleteCompany(id, trackChanges: false);
+            await _serviceManger.CompanyService
+                .DeleteCompanyAsync(id, trackChanges: false);
             return NoContent();
         }
 
         [HttpPut("{id:guid}")]
-        public IActionResult UpdateCompany
-            (Guid id, 
-            [FromBody] CompanyForUpdateDto company)
+        public async Task<IActionResult> UpdateCompany
+            (Guid id,[FromBody] CompanyForUpdateDto company)
         {
             if (company is null) return BadRequest("CompanyForUpdateDto object is null");
 
-            _serviceManger.CompanyService
-                .UpdateCompany(id, company, trackChanges: true);
-
+            await _serviceManger.CompanyService
+                .UpdateCompanyAsync(id, company, trackChanges: true);
             return NoContent();
+
             /*company updates, employee ADDS !! check comment in the dto..
              * postman put 
              * https://localhost:7165/api/companies/3d490a70-94ce-4d15-9494-5248280c2ce3
