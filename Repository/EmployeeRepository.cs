@@ -29,8 +29,16 @@ namespace Repository
         public async Task<PagedList<Employee>> GetEmployeesAsync
             (Guid companyId,EmployeeParameters employeeParameters, bool trackChanges)
         {
-            var employees = await FindByCondition(e => e.CompanyId.Equals(companyId),trackChanges)
-            .OrderBy(e => e.Name)
+            //var employees = await FindByCondition(e => e.CompanyId.Equals(companyId),trackChanges)
+            //.OrderBy(e => e.Name)
+            
+            //age filtering added 
+            var employees = await FindByCondition
+                (e => e.CompanyId.Equals(companyId) && 
+                (e.Age>= employeeParameters.MinAge && e.Age <= employeeParameters.MaxAge), trackChanges)
+            /* https://localhost:7165/api/companies/3d490a70-94ce-4d15-9494-5248280c2ce3/employees?minAge=32*/
+            /*https://localhost:7165/api/companies/3d490a70-94ce-4d15-9494-5248280c2ce3/employees?minAge=22&maxAge=34*/
+            /*https://localhost:7165/api/companies/3d490a70-94ce-4d15-9494-5248280c2ce3/employees?pageNumber=1&pageSize=3&minAge=22&maxAge=34*/
             //paging props skip/take, for larger data
             .Skip((employeeParameters.PageNumber - 1) * employeeParameters.PageSize)
             .Take(employeeParameters.PageSize)
