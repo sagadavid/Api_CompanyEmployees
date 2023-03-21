@@ -43,15 +43,15 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        [ServiceFilter(typeof(ValidationFilterAttribute))]//drop checks below
+        //[ServiceFilter(typeof(ValidationFilterAttribute))]//drop checks below
         public async Task<IActionResult> CreateEmployeeForCompany
             (Guid companyId, [FromBody] EmployeeForCreationDto employee)
         {
-            //if (employee is null)
-            //    return BadRequest("EmployeeForCreationDto object is null");
+            if (employee is null)
+                return BadRequest("EmployeeForCreationDto object is null");
 
-            //if (!ModelState.IsValid)
-            //    return UnprocessableEntity(ModelState);//now we get on invalid posting -->422 unprocessable entity..
+            if (!ModelState.IsValid)
+                return UnprocessableEntity(ModelState);//now we get on invalid posting -->422 unprocessable entity..
             var employeeToReturn =
             await _serviceManager.EmployeeService.CreateEmployeeForCompanyAsync
                     (companyId, employee, trackChanges: false);
@@ -89,15 +89,15 @@ namespace Presentation.Controllers
         }
 
         [HttpPut("{id:guid}")]//api/companies/{companyId}/employees/{id}
-        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        //[ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> UpdateEmployeeForCompany
                     (Guid companyId,
                     Guid id,
                     [FromBody] EmployeeForUpdateDto employee)
         {
-            //if (employee is null) return BadRequest("EmployeeForUpdateDto object is null");
+            if (employee is null) return BadRequest("EmployeeForUpdateDto object is null");
 
-            //if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
+            if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
 
             await _serviceManager.EmployeeService.UpdateEmployeeForCompanyAsync
                 (companyId, id, employee, compTrackChanges: false, empTrackChanges: true);

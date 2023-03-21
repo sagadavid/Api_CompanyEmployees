@@ -38,14 +38,14 @@ namespace CompanyEmployees.Presentation.Controllers
         }
 
         [HttpPost]
-        [ServiceFilter(typeof(ValidationFilterAttribute))]//validation instead if company check
+        //[ServiceFilter(typeof(ValidationFilterAttribute))]//validation instead if company check
         public async Task<IActionResult> CreateCompany([FromBody] CompanyForCreationDto company)
         {
-            //if (company is null)
-            //    return BadRequest("CompanyForCreationDto object is null");
+            if (company is null)
+                return BadRequest("CompanyForCreationDto object is null");
 
-            //if (!ModelState.IsValid)
-            //    return UnprocessableEntity(ModelState);//now we get on invalid posting -->422 unprocessable entity..
+            if (!ModelState.IsValid)
+                return UnprocessableEntity(ModelState);//now we get on invalid posting -->422 unprocessable entity..
 
             var createdCompany = await _serviceManger.CompanyService.CreateCompanyAsync(company);
             return CreatedAtRoute("GetCompanyById", new { id = createdCompany.Id }, createdCompany);
@@ -86,11 +86,11 @@ namespace CompanyEmployees.Presentation.Controllers
         }
 
         [HttpPut("{id:guid}")]
-        [ServiceFilter(typeof(ValidationFilterAttribute))]//no need for company check codes below 
+        //[ServiceFilter(typeof(ValidationFilterAttribute))]//no need for company check codes below 
         public async Task<IActionResult> UpdateCompany
             (Guid id,[FromBody] CompanyForUpdateDto company)
         {
-            //if (company is null) return BadRequest("CompanyForUpdateDto object is null");
+            if (company is null) return BadRequest("CompanyForUpdateDto object is null");
 
             await _serviceManger.CompanyService
                 .UpdateCompanyAsync(id, company, trackChanges: true);
