@@ -13,10 +13,14 @@ namespace CodeMaze_CompanyEmployees.Extensions
         public static void ConfigureCors(this IServiceCollection services)=> 
             services.AddCors(options =>
             {
-                options.AddPolicy("CorsPolicy", builder =>
-                builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-                
+                options.AddPolicy("CorsPolicy", builder =>builder
                 //.WithOrigins("https://someweb.com").WithMethods("GET").WithHeaders("accept")
+                .AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
+                .WithExposedHeaders("X-Pagination"));//to enable the client application to read the new X-Pagination
+                                                     //header that we’ve added in our action,
+                                                     //we have to modify the CORS configuration
+
+                
             });
         public static void ConfigureIISIntegration(this IServiceCollection services) =>
             services.Configure<IISOptions>(options =>
