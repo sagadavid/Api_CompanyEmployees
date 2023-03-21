@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Shared.RequestFeatures;
 
 namespace Service
 {
@@ -60,6 +61,7 @@ namespace Service
             <IEnumerable<EmployeeDto>>
                 GetEmployeesAsync
                     (Guid companyId,
+                    EmployeeParameters employeeParameters,
                     bool trackChanges)
         {
             await CheckIfCompanyExists(companyId, trackChanges);
@@ -67,7 +69,7 @@ namespace Service
             //select employees depending company id
             var employeesFromDb =
                     await _repositoryManager.EmployeeRepo
-                    .GetEmployeesAsync(companyId, trackChanges);
+                    .GetEmployeesAsync(companyId, employeeParameters, trackChanges);
             //map each employee to enumetable dto
             var employeesDto =
                     _mapper.Map<IEnumerable<EmployeeDto>>(employeesFromDb);
@@ -108,7 +110,7 @@ namespace Service
 
             var employeeForCompany =
                 await GetEmployeeForCompanyAndCheckIfItExists
-                        (companyId, id,trackChanges);
+                        (companyId, id, trackChanges);
 
             _repositoryManager.EmployeeRepo
                     .DeleteEmployee(employeeForCompany);
@@ -127,7 +129,7 @@ namespace Service
             await CheckIfCompanyExists(companyId, compTrackChanges);
 
             var employeeEntity = await GetEmployeeForCompanyAndCheckIfItExists
-                        (companyId, id,empTrackChanges);
+                        (companyId, id, empTrackChanges);
 
             _mapper.Map(employeeForUpdate, employeeEntity);
 

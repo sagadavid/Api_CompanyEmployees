@@ -8,24 +8,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Shared.RequestFeatures;
 
 namespace Presentation.Controllers
 {
     [Route("api/companies/{companyId}/employees")]
     public class EmployeesController : ControllerBase
     {
-        private readonly 
+        private readonly
             IServiceManager _serviceManager;
 
-        public 
-            EmployeesController (IServiceManager serviceManager) =>
+        public
+            EmployeesController(IServiceManager serviceManager) =>
             _serviceManager = serviceManager;
 
         [HttpGet]
-        public async Task<IActionResult> GetEmployeesPerCompany(Guid companyId)
+        //public async Task<IActionResult> GetEmployeesForCompany(Guid companyId)
+        public async Task<IActionResult> GetEmployeesForCompany
+            (Guid companyId, [FromQuery] EmployeeParameters employeeParameters)
         {
             var employees = await _serviceManager.EmployeeService.GetEmployeesAsync
-            (companyId, trackChanges: false);
+            (companyId, employeeParameters, trackChanges: false);
             return Ok(employees);
             /*we have the companyId parameter in our action and this parameter will be 
              * mapped from the main route. For that reason, we didn’t place it in the 
@@ -53,8 +56,9 @@ namespace Presentation.Controllers
             await _serviceManager.EmployeeService.CreateEmployeeForCompanyAsync
                     (companyId, employee, trackChanges: false);
 
-            return CreatedAtRoute("GetEmployeeForCompany", 
-                new {companyId, id = employeeToReturn.Id},employeeToReturn);}
+            return CreatedAtRoute("GetEmployeeForCompany",
+                new { companyId, id = employeeToReturn.Id }, employeeToReturn);
+        }
         /*
          postman post : https://localhost:7165/api/companies/0eec53d0-6091-40d6-b994-08db19cfa35a/employees
         json row body at post : {"name":"david saga", "age":"45","position":"team ansvarlig" }
@@ -128,23 +132,23 @@ namespace Presentation.Controllers
 
 
         [HttpPatch("{id:guid}")]
-            public async Task<IActionResult> PartiallyUpdateEmployeeForCompany
-               (Guid companyId, 
-                Guid id, 
-                [FromBody] 
+        public async Task<IActionResult> PartiallyUpdateEmployeeForCompany
+               (Guid companyId,
+                Guid id,
+                [FromBody]
                     JsonPatchDocument<EmployeeForUpdateDto> patchDoc)
         {
-            if (patchDoc is null) 
+            if (patchDoc is null)
                 return BadRequest("patchDoc object sent from client is null.");
 
-            var result = 
+            var result =
                 await _serviceManager.EmployeeService
-                .GetEmployeeForPatchAsync (companyId, 
-                                        id, 
-                                        compTrackChanges: false, 
+                .GetEmployeeForPatchAsync(companyId,
+                                        id,
+                                        compTrackChanges: false,
                                         empTrackChanges: true);
 
-            patchDoc.ApplyTo (result.employeeToPatch, ModelState);
+            patchDoc.ApplyTo(result.employeeToPatch, ModelState);
 
             TryValidateModel(result.employeeToPatch);
 

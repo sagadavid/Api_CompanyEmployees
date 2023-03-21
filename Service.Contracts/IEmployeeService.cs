@@ -1,5 +1,6 @@
 ﻿using Entities.Models;
 using Shared.DataTransferObjects;
+using Shared.RequestFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace Service.Contracts
     {
         Task <IEnumerable<EmployeeDto>> GetEmployeesAsync
             (Guid companyId, 
+            EmployeeParameters employeeParameters,
             bool trackChanges);
         Task <EmployeeDto> GetEmployeeByIdAsync
             (Guid companyId, 
