@@ -14,16 +14,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Service
 {
-    internal sealed class 
+    internal sealed class
         EmployeeService : IEmployeeService
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly ILoggerManager _logMan;
         private readonly IMapper _mapper;
 
-        public 
+        public
             EmployeeService
-                    (IRepositoryManager repositoryManager, 
+                    (IRepositoryManager repositoryManager,
                      ILoggerManager logMan,
                      IMapper mapper)
         {
@@ -32,28 +32,24 @@ namespace Service
             _mapper = mapper;
         }
 
-        public async Task 
-            <EmployeeDto >
+        public async Task
+            <EmployeeDto>
                 GetEmployeeByIdAsync
-                    (Guid companyId, 
-                     Guid id, 
+                    (Guid companyId,
+                     Guid id,
                      bool trackChanges)
         {
-            var company = 
-                await _repositoryManager.CompanyRepo
-                .GetCompanyByIdAsync(companyId, trackChanges);
-
-            if (company == null) throw new CompanyNotFoundException(companyId);
+            await CheckIfCompanyExists(companyId, trackChanges);
 
             //select employee depending company id
-            var employeeFromDb = 
+            var employeeFromDb =
                 await _repositoryManager.EmployeeRepo
                 .GetEmployeeByIdAsync(companyId, id, trackChanges);
 
             if (employeeFromDb == null) throw new EmployeeNotFoundException(id);
 
             //map each employee to enumetable dto
-            var employeeDto = 
+            var employeeDto =
                 _mapper.Map<EmployeeDto>(employeeFromDb);
 
             return employeeDto;
@@ -61,139 +57,106 @@ namespace Service
         }
 
         public async Task
-            <IEnumerable<EmployeeDto> >
+            <IEnumerable<EmployeeDto>>
                 GetEmployeesAsync
-                    (Guid companyId, 
+                    (Guid companyId,
                     bool trackChanges)
         {
-            var company = 
-                await _repositoryManager.CompanyRepo
-                .GetCompanyByIdAsync(companyId, trackChanges);
+            await CheckIfCompanyExists(companyId, trackChanges);
 
-            if (company == null) throw new CompanyNotFoundException(companyId);
-            
             //select employees depending company id
-                var employeesFromDb = 
-                        await _repositoryManager.EmployeeRepo
-                        .GetEmployeesAsync(companyId, trackChanges);
-                //map each employee to enumetable dto
-                var employeesDto = 
-                        _mapper.Map<IEnumerable<EmployeeDto>>(employeesFromDb);
-                
-                return employeesDto;
-                    
+            var employeesFromDb =
+                    await _repositoryManager.EmployeeRepo
+                    .GetEmployeesAsync(companyId, trackChanges);
+            //map each employee to enumetable dto
+            var employeesDto =
+                    _mapper.Map<IEnumerable<EmployeeDto>>(employeesFromDb);
+
+            return employeesDto;
+
 
         }
 
-        public  async Task
+        public async Task
             <EmployeeDto>
             CreateEmployeeForCompanyAsync
-                    (Guid companyId, 
-                    EmployeeForCreationDto employeeForCreation, 
+                    (Guid companyId,
+                    EmployeeForCreationDto employeeForCreation,
                     bool trackChanges)
         {
-            var company = 
-                await _repositoryManager.CompanyRepo
-                .GetCompanyByIdAsync(companyId, trackChanges);
-            
-            if (company is null)
-                throw new CompanyNotFoundException(companyId);
-            var employeeEntity = 
+            await CheckIfCompanyExists(companyId, trackChanges);
+            var employeeEntity =
                 _mapper.Map<Employee>(employeeForCreation);
-            
+
             _repositoryManager.EmployeeRepo
                    .CreateEmployeeForCompany(companyId, employeeEntity);
-            
+
             await _repositoryManager.SaveAsync();
-            var employeeToReturn = 
+            var employeeToReturn =
                 _mapper.Map<EmployeeDto>(employeeEntity);
-            
+
             return employeeToReturn;
         }
 
-        public async Task 
+        public async Task
             DeleteEmployeeForCompanyAsync
-                    (Guid companyId, 
-                     Guid id, 
+                    (Guid companyId,
+                     Guid id,
                      bool trackChanges)
         {
-            var company =
-                await _repositoryManager.CompanyRepo
-                .GetCompanyByIdAsync(companyId, trackChanges);
-            if (company is null)
-                throw new CompanyNotFoundException(companyId);
-            ////If company exists, we fetch the employee for that company,
-            ///that means, company is companyId actually
-            
-            var employeeForCompany = 
-                await _repositoryManager.EmployeeRepo
-                .GetEmployeeByIdAsync(companyId, id, trackChanges);
+            await CheckIfCompanyExists(companyId, trackChanges);
 
-            ////company and employee id intersects, gives us employee for company
-            if (employeeForCompany is null)
-                throw new EmployeeNotFoundException(id);
+            var employeeForCompany =
+                await GetEmployeeForCompanyAndCheckIfItExists
+                        (companyId, id,trackChanges);
 
             _repositoryManager.EmployeeRepo
                     .DeleteEmployee(employeeForCompany);
             await _repositoryManager.SaveAsync();
         }
 
-        public async Task 
+        public async Task
             UpdateEmployeeForCompanyAsync
-                (Guid companyId, 
-                Guid id, 
+                (Guid companyId,
+                Guid id,
                 EmployeeForUpdateDto employeeForUpdate,
-                bool compTrackChanges, 
+                bool compTrackChanges,
                 bool empTrackChanges)
         {
 
-            var company = await _repositoryManager.CompanyRepo
-                          .GetCompanyByIdAsync(companyId, compTrackChanges);
+            await CheckIfCompanyExists(companyId, compTrackChanges);
 
-            if (company is null) throw new CompanyNotFoundException(companyId);
-
-            var employeeEntity = await _repositoryManager.EmployeeRepo
-                                .GetEmployeeByIdAsync(companyId, id, empTrackChanges);
-
-            if (employeeEntity is null) throw new EmployeeNotFoundException(id);
+            var employeeEntity = await GetEmployeeForCompanyAndCheckIfItExists
+                        (companyId, id,empTrackChanges);
 
             _mapper.Map(employeeForUpdate, employeeEntity);
 
             await _repositoryManager.SaveAsync();//we are mapping from the employeeForUpdate object
-                                      //(we will change just the age property in a request) to the
-                                      //employeeEntity — thus changing the state of the
-                                      //employeeEntity object to Modified.
-                                      //Because our entity has a modified state, it is enough to
-                                      //call the Save method without any additional update
-                                      //actions.As soon as we call the Save method, our entity
-                                      //is going to be updated in the database.
+                                                 //(we will change just the age property in a request) to the
+                                                 //employeeEntity — thus changing the state of the
+                                                 //employeeEntity object to Modified.
+                                                 //Because our entity has a modified state, it is enough to
+                                                 //call the Save method without any additional update
+                                                 //actions.As soon as we call the Save method, our entity
+                                                 //is going to be updated in the database.
 
         }
 
         public async Task
-            <(EmployeeForUpdateDto employeeToPatch, 
-            Employee employeeEntity)> 
+            <(EmployeeForUpdateDto employeeToPatch,
+            Employee employeeEntity)>
                     GetEmployeeForPatchAsync
-                            (Guid companyId, 
-                             Guid id, 
-                             bool compTrackChanges, 
+                            (Guid companyId,
+                             Guid id,
+                             bool compTrackChanges,
                              bool empTrackChanges)
         {
-            var company = 
-                await _repositoryManager.CompanyRepo
-                .GetCompanyByIdAsync(companyId, compTrackChanges);
+            await CheckIfCompanyExists(companyId, compTrackChanges);
 
-            if (company is null)
-                throw new CompanyNotFoundException(companyId);
+            var employeeEntity =
+                await GetEmployeeForCompanyAndCheckIfItExists(companyId, id, empTrackChanges);
 
-            var employeeEntity = 
-                await _repositoryManager.EmployeeRepo
-                .GetEmployeeByIdAsync(companyId, id, empTrackChanges);
-
-            if (employeeEntity is null)
-                throw new EmployeeNotFoundException(companyId);
-
-            var employeeToPatch = 
+            var employeeToPatch =
                 _mapper.Map<EmployeeForUpdateDto>(employeeEntity);
 
             return (employeeToPatch, employeeEntity);//return both objects
@@ -202,15 +165,38 @@ namespace Service
 
         }
 
-        public async Task  
+        public async Task
             SaveChangesForPatchAsync
-                    (EmployeeForUpdateDto employeeToPatch, 
+                    (EmployeeForUpdateDto employeeToPatch,
                      Employee employeeEntity)
         {
             _mapper.Map(employeeToPatch, employeeEntity);
             await _repositoryManager.SaveAsync();
         }
 
+        private async Task CheckIfCompanyExists(Guid companyId, bool trackChanges)
+        {
+            var company = await _repositoryManager.CompanyRepo
+                .GetCompanyByIdAsync(companyId, trackChanges);
+            if (company is null)
+                throw new CompanyNotFoundException(companyId);
+        }
+
+        private async Task<Employee> GetEmployeeForCompanyAndCheckIfItExists
+            (Guid companyId, Guid id, bool trackChanges)
+        {
+            var employeeDb = await _repositoryManager.EmployeeRepo
+                .GetEmployeeByIdAsync(companyId, id, trackChanges);
+            if (employeeDb is null)
+                throw new EmployeeNotFoundException(id);
+            return employeeDb;
+        }
+        /*all of the methods are cleaner and easier to maintain since our 
+         * validation code is in a single place, and if we need to modify these 
+         * validations, there’s only one place we need to change.
+         Additionally, if you want you can create a new class and extract these methods,
+        register that class as a service, inject it into our service classes and use
+        the validation methods.*/
 
     }
 }
