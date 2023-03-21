@@ -2,13 +2,10 @@ using CodeMaze_CompanyEmployees.Extensions;
 using Contracts;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using NLog;
-using Repository;
 using Microsoft.AspNetCore.Mvc.Formatters;
-using Microsoft.Extensions.Options;
+using Presentation.ActionFilters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +32,8 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 {options.SuppressModelStateInvalidFilter = true;});//enable custom responses,
                                                    //fx on createataction for post api
 
+builder.Services.AddScoped<ValidationFilterAttribute>();//using Presentation.ActionFilters;
+
 /*without modifying addcontrollers, our API wouldn’t work
      * -because we deleted controller folder and files and presented presentation project-, 
      * and wouldn’t know where to route incoming requests. 
@@ -42,6 +41,7 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
      * of the controllers inside of the Presentation project and configure 
      * them with the framework. They are going to be treated the same as if 
      * they were defined conventionally.*/
+
 builder.Services.AddControllers(config => {
     /*A server does not explicitly specify where it formats a response to JSON. 
      * But you can override it by changing configuration options through the Add Controllers method.
