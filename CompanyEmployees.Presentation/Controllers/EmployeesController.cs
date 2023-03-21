@@ -9,6 +9,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Shared.RequestFeatures;
+using System.Fabric.Query;
+using System.Text.Json;
 
 namespace Presentation.Controllers
 {
@@ -27,12 +29,18 @@ namespace Presentation.Controllers
         public async Task<IActionResult> GetEmployeesForCompany
             (Guid companyId, [FromQuery] EmployeeParameters employeeParameters)
         {
-            var employees = await _serviceManager.EmployeeService.GetEmployeesAsync
-            (companyId, employeeParameters, trackChanges: false);
-            return Ok(employees);
-            /*we have the companyId parameter in our action and this parameter will be 
-             * mapped from the main route. For that reason, we didn’t place it in the 
-             * [HttpGet] attribute as we did with the GetCompany action.*/
+            //var employees = await _serviceManager.EmployeeService.GetEmployeesAsync
+            //(companyId, employeeParameters, trackChanges: false);
+            //return Ok(employees);
+
+            //pagedlist version
+            var pagedResult = await _serviceManager.EmployeeService.GetEmployeesAsync
+                (companyId,employeeParameters, trackChanges: false);
+            Response.Headers.Add("X-Pagination",
+            JsonSerializer.Serialize(pagedResult.metaData));//now we have some additional useful information
+                                                            //in the X-Pagination response header
+                                                            //{"CurrentPage":5,"TotalPages":8,"PageSize":1,"TotalCount":8,"HasPrevious":true,"HasNext":true}
+            return Ok(pagedResult.employees);
         }
 
         [HttpGet("{id:guid}", Name = "GetEmployeeForCompany")]//we provide parameters for post/createdatroute 

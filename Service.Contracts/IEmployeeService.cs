@@ -11,22 +11,30 @@ namespace Service.Contracts
 {
     public interface IEmployeeService
     {
-        Task <IEnumerable<EmployeeDto>> GetEmployeesAsync
-            (Guid companyId, 
-            EmployeeParameters employeeParameters,
-            bool trackChanges);
+        //Task <IEnumerable<EmployeeDto>> GetEmployeesAsync
+        //    (Guid companyId, 
+        //    EmployeeParameters employeeParameters,
+        //    bool trackChanges);
+
+        Task<(IEnumerable<EmployeeDto> employees, MetaData metaData)> GetEmployeesAsync
+            (Guid companyId, EmployeeParameters employeeParameters, bool trackChanges);//Now our method returns
+                                                                                       //a Tuple containing two fields – employees and metadata.
+
         Task <EmployeeDto> GetEmployeeByIdAsync
             (Guid companyId, 
             Guid id, 
             bool trackChanges);
+
         Task <EmployeeDto> CreateEmployeeForCompanyAsync
             (Guid companyId, 
             EmployeeForCreationDto employeeForCreation, 
             bool trackChanges);
+
         Task DeleteEmployeeForCompanyAsync
             (Guid companyId, 
             Guid id, 
             bool trackChanges);
+
         Task UpdateEmployeeForCompanyAsync
             (Guid companyId, 
             Guid id, 
@@ -43,6 +51,7 @@ namespace Service.Contracts
                         Guid id, 
                         bool compTrackChanges, 
                         bool empTrackChanges);
+
         Task SaveChangesForPatchAsync
             (EmployeeForUpdateDto employeeToPatch,
             Employee employeeEntity);

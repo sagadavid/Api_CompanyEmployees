@@ -16,14 +16,25 @@ namespace Repository
         public EmployeeRepository(RepositoryContext repositoryContext) :
                 base(repositoryContext)
         { }
+        ///pagination added/employee parameter
+        // public async Task<IEnumerable<Employee>> GetEmployeesAsync
+        //     (Guid companyId, EmployeeParameters employeeParameters, bool trackChanges) =>
+        //await FindByCondition(e => e.CompanyId.Equals(companyId), trackChanges)
+        //     .OrderBy(e => e.Name)
+        //     .Skip((employeeParameters.PageNumber - 1) * employeeParameters.PageSize)//skip the first ((3 – 1) * 20) = 40 results,
+        //     .Take(employeeParameters.PageSize)//then take the next 20 results and return them to the caller.
+        //     .ToListAsync();
 
-        public async Task<IEnumerable<Employee>> GetEmployeesAsync//pagination added/employee parameter
-            (Guid companyId, EmployeeParameters employeeParameters, bool trackChanges) =>
-       await FindByCondition(e => e.CompanyId.Equals(companyId), trackChanges)
+        ///pagedlist version of getemployeesasync method
+        public async Task<PagedList<Employee>> GetEmployeesAsync
+            (Guid companyId,EmployeeParameters employeeParameters, bool trackChanges)
+        {
+            var employees = await FindByCondition(e => e.CompanyId.Equals(companyId),trackChanges)
             .OrderBy(e => e.Name)
-            .Skip((employeeParameters.PageNumber - 1) * employeeParameters.PageSize)//skip the first ((3 – 1) * 20) = 40 results,
-            .Take(employeeParameters.PageSize)//then take the next 20 results and return them to the caller.
             .ToListAsync();
+            return PagedList<Employee>
+            .ToPagedList(employees, employeeParameters.PageNumber,employeeParameters.PageSize);
+        }
 
         public async Task<Employee> GetEmployeeByIdAsync
             (Guid companyId, Guid id, bool trackChanges) =>

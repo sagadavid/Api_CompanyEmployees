@@ -57,25 +57,34 @@ namespace Service
 
         }
 
-        public async Task
-            <IEnumerable<EmployeeDto>>
-                GetEmployeesAsync
-                    (Guid companyId,
-                    EmployeeParameters employeeParameters,
-                    bool trackChanges)
+        //public async Task
+        //    <IEnumerable<EmployeeDto>>
+        //        GetEmployeesAsync
+        //            (Guid companyId,
+        //            EmployeeParameters employeeParameters,
+        //            bool trackChanges)
+
+        public async Task<(IEnumerable<EmployeeDto> employees, MetaData metaData)> GetEmployeesAsync
+            (Guid companyId, EmployeeParameters employeeParameters, bool trackChanges)
         {
             await CheckIfCompanyExists(companyId, trackChanges);
 
             //select employees depending company id
-            var employeesFromDb =
-                    await _repositoryManager.EmployeeRepo
-                    .GetEmployeesAsync(companyId, employeeParameters, trackChanges);
-            //map each employee to enumetable dto
+            //var employeesFromDb =
+            //        await _repositoryManager.EmployeeRepo
+            //        .GetEmployeesAsync(companyId, employeeParameters, trackChanges);
+            ////map each employee to enumetable dto
+            //var employeesDto =
+            //        _mapper.Map<IEnumerable<EmployeeDto>>(employeesFromDb);
+
+            //return employeesDto;
+
+            //pagelist-metadata added
+            var employeesWithMetaData = await _repositoryManager.EmployeeRepo
+                .GetEmployeesAsync(companyId, employeeParameters, trackChanges);
             var employeesDto =
-                    _mapper.Map<IEnumerable<EmployeeDto>>(employeesFromDb);
-
-            return employeesDto;
-
+            _mapper.Map<IEnumerable<EmployeeDto>>(employeesWithMetaData);
+            return (employees: employeesDto, metaData: employeesWithMetaData.MetaData);
 
         }
 
