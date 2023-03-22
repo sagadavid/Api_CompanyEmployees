@@ -1,0 +1,37 @@
+### this is a line break
+
+@newlyPostedEmployeeId=1a513ea6-5655-4665-6adf-08db2b2274c2
+@baseApiUrl=https://localhost:7165/api/companies
+
+# get all employees
+GET {{baseApiUrl}}/3d490a70-94ce-4d15-9494-5248280c2ce3/employees?pageNumber=3&pageSize=3
+###
+POST {{baseApiUrl}}/3d490a70-94ce-4d15-9494-5248280c2ce3/employees/
+Content-Type: application/json
+
+{
+"name":"new rest tool",
+"age":"19",
+"position":"chaylak"
+
+}
+###
+PUT {{baseApiUrl}}/3d490a70-94ce-4d15-9494-5248280c2ce3/employees/{{newlyPostedEmployeeId}}
+Content-Type: application/json
+
+{
+"name":"updated new test tool",
+"age":"20",
+"position":"chaylak"
+}
+
+###
+GET {{baseApiUrl}}/3d490a70-94ce-4d15-9494-5248280c2ce3/employees/{{newlyPostedEmployeeId}}
+###
+# recheck patch newtonjson etc..
+PATCH {{baseApiUrl}}/3d490a70-94ce-4d15-9494-5248280c2ce3/employees/{{newlyPostedEmployeeId}}
+Content-Type:application/json
+
+{
+"age":"18"
+}
