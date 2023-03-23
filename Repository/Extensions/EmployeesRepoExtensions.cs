@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;//package added for sorting
 using System.Reflection;
+using Repository.Extensions.Utility;
 
 namespace Repository.Extensions
 {
@@ -41,6 +42,9 @@ namespace Repository.Extensions
         {
             if (string.IsNullOrWhiteSpace(orderByQueryString))
                 return employees.OrderBy(e => e.Name);
+            
+            var orderQuery = OrderQueryBuilder.CreateOrderQuery<Employee>(orderByQueryString);//we are extracting a logic that can be reused in the CreateOrderQuery<T> method. But of course, we have to create that method.
+
             var orderParams = orderByQueryString.Trim().Split(',');// to get the individual fields:
             var propertyInfos = typeof(Employee).GetProperties
                 (BindingFlags.Public | BindingFlags.Instance);//excerpt/find property name 
@@ -58,7 +62,7 @@ namespace Repository.Extensions
                 orderQueryBuilder.Append($"{objectProperty.Name.ToString()} {direction}, ");
 }
 
-            var orderQuery = orderQueryBuilder.ToString().TrimEnd(',', ' ');//removing excess commas
+            orderQuery = orderQueryBuilder.ToString().TrimEnd(',', ' ');//removing excess commas
             if (string.IsNullOrWhiteSpace(orderQuery))
                 return employees.OrderBy(e => e.Name);//one last check to see if our query indeed has something in it
 
