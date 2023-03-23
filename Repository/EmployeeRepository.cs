@@ -2,12 +2,7 @@
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using Shared.RequestFeatures;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Repository.Extensions;
 
 namespace Repository
 {
@@ -16,7 +11,7 @@ namespace Repository
         public EmployeeRepository(RepositoryContext repositoryContext) :
                 base(repositoryContext)
         { }
-        ///pagination added/employee parameter
+        //***** pagination added/employee parameter
         // public async Task<IEnumerable<Employee>> GetEmployeesAsync
         //     (Guid companyId, EmployeeParameters employeeParameters, bool trackChanges) =>
         //await FindByCondition(e => e.CompanyId.Equals(companyId), trackChanges)
@@ -31,34 +26,48 @@ namespace Repository
         {
             //var employees = await FindByCondition(e => e.CompanyId.Equals(companyId),trackChanges)
             //.OrderBy(e => e.Name)
-            
-            //age filtering added 
+
+            //**** age filtering added 
+            //var employees = await FindByCondition
+            //    (e => e.CompanyId.Equals(companyId) && 
+            //    (e.Age>= employeeParameters.MinAge && e.Age <= employeeParameters.MaxAge), trackChanges)
+            ///* https://localhost:7165/api/companies/3d490a70-94ce-4d15-9494-5248280c2ce3/employees?minAge=32*/
+            ///*https://localhost:7165/api/companies/3d490a70-94ce-4d15-9494-5248280c2ce3/employees?minAge=22&maxAge=34*/
+            ///*https://localhost:7165/api/companies/3d490a70-94ce-4d15-9494-5248280c2ce3/employees?pageNumber=1&pageSize=3&minAge=22&maxAge=34*/
+            ////paging props skip/take, for larger data
+            //.Skip((employeeParameters.PageNumber - 1) * employeeParameters.PageSize)
+            //.Take(employeeParameters.PageSize)
+            //.ToListAsync();
+
+            //***** SearchTerm and FilterEmployees(age filter refactored)
+            //methods are added by extension
             var employees = await FindByCondition
-                (e => e.CompanyId.Equals(companyId) && 
-                (e.Age>= employeeParameters.MinAge && e.Age <= employeeParameters.MaxAge), trackChanges)
-            /* https://localhost:7165/api/companies/3d490a70-94ce-4d15-9494-5248280c2ce3/employees?minAge=32*/
-            /*https://localhost:7165/api/companies/3d490a70-94ce-4d15-9494-5248280c2ce3/employees?minAge=22&maxAge=34*/
-            /*https://localhost:7165/api/companies/3d490a70-94ce-4d15-9494-5248280c2ce3/employees?pageNumber=1&pageSize=3&minAge=22&maxAge=34*/
-            //paging props skip/take, for larger data
-            .Skip((employeeParameters.PageNumber - 1) * employeeParameters.PageSize)
-            .Take(employeeParameters.PageSize)
-            .ToListAsync();
+                        (e => e.CompanyId.Equals(companyId),trackChanges)
+                .FilterEmployees(employeeParameters.MinAge, employeeParameters.MaxAge)
+                .SearchTerm(employeeParameters.SearchTerm)
+                .OrderBy(e => e.Name)
+                .ToListAsync();
 
-            var count = await FindByCondition
-                (e => e.CompanyId.Equals(companyId), trackChanges).CountAsync();//Even though we have an additional
-                                                                                //call to the database with the CountAsync method,
-                                                                                //this solution was tested upon millions of rows and
-                                                                                //was much faster than the previous one.
-            //for relatively smaller data
-            //return PagedList<Employee>
-            //.ToPagedList(employees, employeeParameters.PageNumber,employeeParameters.PageSize);
+            //*** for relatively smaller data
+            return PagedList<Employee>
+            .ToPagedList(employees, employeeParameters.PageNumber, employeeParameters.PageSize);
 
-            return new PagedList<Employee>
-                (employees, count,employeeParameters.PageNumber, employeeParameters.PageSize);
+            //call to the database with the CountAsync method,
+            //this solution was tested upon millions of rows and
+            //was much faster than the previous one.
+
+            //var count = await FindByCondition
+            //    (e => e.CompanyId.Equals(companyId), trackChanges).CountAsync();//Even though we have an additional
+
+
+            //return new PagedList<Employee>
+            //    (employees, count,employeeParameters.PageNumber, employeeParameters.PageSize);
         }
 
         public async Task<Employee> GetEmployeeByIdAsync(Guid companyId, Guid id, bool trackChanges) =>
-        await FindByCondition(e => e.CompanyId.Equals(companyId) && e.Id.Equals(id), trackChanges).SingleOrDefaultAsync();
+        await FindByCondition(e => e.CompanyId.Equals
+                (companyId) && e.Id.Equals(id), trackChanges)
+                                                        .SingleOrDefaultAsync();
 
         public void CreateEmployeeForCompany(Guid companyId, Employee employee)
         {

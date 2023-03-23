@@ -38,7 +38,7 @@ namespace CompanyEmployees.Presentation.Controllers
         }
 
         [HttpPost]
-        //[ServiceFilter(typeof(ValidationFilterAttribute))]//validation instead if company check
+        //[ServiceFilter(typeof(ValidationFilterAttribute))]//validation instead if company checks below
         public async Task<IActionResult> CreateCompany([FromBody] CompanyForCreationDto company)
         {
             if (company is null)
