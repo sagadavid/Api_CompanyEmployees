@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MathNet.Numerics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,5 +16,7 @@ namespace Shared.RequestFeatures
         public bool ValidAgeRange => MaxAge > MinAge;
 
         public string? SearchTerm { get; set; }
+
+        public EmployeeParameters() => OrderBy = "name";//enable the default sorting condition for Employee if none was stated
     }
 }

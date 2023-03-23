@@ -45,6 +45,7 @@ namespace Repository
                         (e => e.CompanyId.Equals(companyId),trackChanges)
                 .FilterEmployees(employeeParameters.MinAge, employeeParameters.MaxAge)
                 .SearchTerm(employeeParameters.SearchTerm)
+                .Sort(employeeParameters.OrderBy)//extension method provided, hardcoded
                 .OrderBy(e => e.Name)
                 .ToListAsync();
 

@@ -1,5 +1,5 @@
 ### this is a line break
-
+# we can define variables to use in the rest query
 @newlyPostedEmployeeId=1a513ea6-5655-4665-6adf-08db2b2274c2
 @baseApiUrl=https://localhost:7165/api/companies
 
@@ -35,6 +35,8 @@ Content-Type:application/json
 {
 "age":"18"
 }
-###
-
+### search term added 
 GET {{baseApiUrl}}/3d490a70-94ce-4d15-9494-5248280c2ce3/employees?pageNumber=2&pageSize=2&searchTerm=m
+
+### orderby added
+GET {{baseApiUrl}}/3d490a70-94ce-4d15-9494-5248280c2ce3/employees?pageNumber=3&pageSize=2&searchTerm=m&orderBy=name,age desc
