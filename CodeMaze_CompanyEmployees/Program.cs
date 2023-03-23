@@ -6,6 +6,8 @@ using Microsoft.Extensions.Options;
 using NLog;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Presentation.ActionFilters;
+using Service.DataShaping;
+using Shared.DataTransferObjects;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -66,6 +68,8 @@ NewtonsoftJsonPatchInputFormatter GetJsonPatchInputFormatter() =>
                                                           * By adding a method like this in the Program class, we are creating a local function. 
                                                           * This function configures support for JSON Patch using Newtonsoft.
                                                           * Json while leaving the other formatters unchanged.*/
+
+builder.Services.AddScoped<IDataShaper<EmployeeDto>, DataShaper<EmployeeDto>>();
 
 var app = builder.Build();
 

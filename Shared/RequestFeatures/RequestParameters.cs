@@ -26,5 +26,6 @@ namespace Shared.RequestFeatures
         }
 
         public string? OrderBy { get; set; } //able to send requests with the orderBy clause in them
+        public string? Fields { get; set; }//to achieve data shaping
     }
 }

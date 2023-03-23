@@ -12,6 +12,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Shared.RequestFeatures;
+using Service.DataShaping;
+using System.Dynamic;
 
 namespace Service
 {
@@ -21,16 +23,19 @@ namespace Service
         private readonly IRepositoryManager _repositoryManager;
         private readonly ILoggerManager _logMan;
         private readonly IMapper _mapper;
+        private readonly IDataShaper<EmployeeDto> _dataShaper;
 
         public
             EmployeeService
                     (IRepositoryManager repositoryManager,
                      ILoggerManager logMan,
-                     IMapper mapper)
+                     IMapper mapper, 
+                     IDataShaper<EmployeeDto> dataShaper)
         {
             _repositoryManager = repositoryManager;
             _logMan = logMan;
             _mapper = mapper;
+            _dataShaper = dataShaper;
         }
 
         public async Task
@@ -64,7 +69,11 @@ namespace Service
         //            EmployeeParameters employeeParameters,
         //            bool trackChanges)
 
-        public async Task<(IEnumerable<EmployeeDto> employees, MetaData metaData)> GetEmployeesAsync
+        //public async Task<(IEnumerable<EmployeeDto> employees, MetaData metaData)> GetEmployeesAsync
+        //    (Guid companyId, EmployeeParameters employeeParameters, bool trackChanges)
+
+        //for the sake of datashaping
+        public async Task<(IEnumerable<ExpandoObject> employees, MetaData metaData)>GetEmployeesAsync
             (Guid companyId, EmployeeParameters employeeParameters, bool trackChanges)
         {
             if (!employeeParameters.ValidAgeRange) throw new MaxAgeRangeBadRequestException();
@@ -86,7 +95,12 @@ namespace Service
                 .GetEmployeesAsync(companyId, employeeParameters, trackChanges);
             var employeesDto =
             _mapper.Map<IEnumerable<EmployeeDto>>(employeesWithMetaData);
-            return (employees: employeesDto, metaData: employeesWithMetaData.MetaData);
+
+            var shapedData = _dataShaper.ShapeData(employeesDto,employeeParameters.Fields);
+
+            //return (employees: employeesDto, metaData: employeesWithMetaData.MetaData);
+
+            return (employees: shapedData, metaData: employeesWithMetaData.MetaData);
 
         }
 
