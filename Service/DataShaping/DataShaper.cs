@@ -22,7 +22,7 @@ namespace Service.DataShaping
 
         }
 
-        public IEnumerable<Entity> ShapeData(IEnumerable<T> entities, string fieldsString)
+        public IEnumerable<ShapedEntity> ShapeData(IEnumerable<T> entities, string fieldsString)
 
         {
             var requiredProperties = GetRequiredProperties(fieldsString);//to parse the input string that contains the fields we want to fetch.
@@ -32,7 +32,7 @@ namespace Service.DataShaping
 
         }
 
-        public Entity ShapeData(T entity, string fieldsString)
+        public ShapedEntity ShapeData(T entity, string fieldsString)
 
         {
 
@@ -84,12 +84,12 @@ namespace Service.DataShaping
 
         }
 
-        private IEnumerable<Entity> FetchData
+        private IEnumerable<ShapedEntity> FetchData
             (IEnumerable<T> entities, IEnumerable<PropertyInfo> requiredProperties)
 
         {
 
-            var shapedData = new List<Entity>();
+            var shapedData = new List<ShapedEntity>();
 
             foreach (var entity in entities)
 
@@ -107,21 +107,25 @@ namespace Service.DataShaping
 
         //FetchData and FetchDataForEntity are the private methods to extract the values
         //from these required properties we’ve prepared.
-        private Entity FetchDataForEntity(T entity, IEnumerable<PropertyInfo>requiredProperties)
+        private ShapedEntity FetchDataForEntity(T entity, IEnumerable<PropertyInfo>requiredProperties)
 
         {//ExpandoObject implements IDictionary<string,object> , so we can use the TryAdd method to add our
          //property using its name as a key and the value as a value for the dictionary.
 
-            var shapedObject = new Entity();
+            var shapedObject = new ShapedEntity();
             foreach (var property in requiredProperties)
 
             {
 
                 var objectPropertyValue = property.GetValue(entity);
 
-                shapedObject.TryAdd(property.Name, objectPropertyValue);
+                shapedObject.Entity.TryAdd(property.Name, objectPropertyValue);
 
             }
+
+            var objectProperty = entity.GetType().GetProperty("Id");
+
+            shapedObject.Id = (Guid)objectProperty.GetValue(entity);
 
             return shapedObject;
 

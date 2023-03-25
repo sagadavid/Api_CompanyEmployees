@@ -3,14 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Presentation.ActionFilters;
 using Service.Contracts;
 using Shared.DataTransferObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Shared.RequestFeatures;
-using System.Fabric.Query;
 using System.Text.Json;
+using Entities.LinkModels;
+using static Microsoft.AspNetCore.Http.HttpContext;
 
 namespace Presentation.Controllers
 {
@@ -25,22 +21,24 @@ namespace Presentation.Controllers
             _serviceManager = serviceManager;
 
         [HttpGet]
-        //public async Task<IActionResult> GetEmployeesForCompany(Guid companyId)
+        [ServiceFilter(typeof(ValidateMediaTypeAttribute))]//hateoas
         public async Task<IActionResult> GetEmployeesForCompany
             (Guid companyId, [FromQuery] EmployeeParameters employeeParameters)
         {
-            //var employees = await _serviceManager.EmployeeService.GetEmployeesAsync
-            //(companyId, employeeParameters, trackChanges: false);
-            //return Ok(employees);
 
+            var linkParams = new LinkParameters(employeeParameters, HttpContext);
+            //So, we create the linkParams variable and send it instead of employeeParameters to the service method.
             //pagedlist version
-            var pagedResult = await _serviceManager.EmployeeService.GetEmployeesAsync
-                (companyId,employeeParameters, trackChanges: false);
+            var result = await _serviceManager.EmployeeService.GetEmployeesAsync
+                (companyId, linkParams, trackChanges: false);//We change the pageResult variable name to result and
+                                                  //use it to return the proper response to the client.
+                                                  //If our result has links, we return linked entities,
+                                                  //otherwise, we return shaped ones.
             Response.Headers.Add("X-Pagination",
-            JsonSerializer.Serialize(pagedResult.metaData));//now we have some additional useful information
-                                                            //in the X-Pagination response header
-                                                            //{"CurrentPage":5,"TotalPages":8,"PageSize":1,"TotalCount":8,"HasPrevious":true,"HasNext":true}
-            return Ok(pagedResult.employees);
+            JsonSerializer.Serialize(result.metaData));
+
+            return result.linkResponse.HasLinks ? Ok
+                (result.linkResponse.LinkedEntities) : Ok(result.linkResponse.ShapedEntities);
         }
 
         [HttpGet("{id:guid}", Name = "GetEmployeeForCompany")]//we provide parameters for post/createdatroute 
@@ -51,7 +49,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        //[ServiceFilter(typeof(ValidationFilterAttribute))]//drop checks below
+        [ServiceFilter(typeof(ValidationFilterAttribute))]//drop checks below
         public async Task<IActionResult> CreateEmployeeForCompany
             (Guid companyId, [FromBody] EmployeeForCreationDto employee)
         {
@@ -97,7 +95,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPut("{id:guid}")]//api/companies/{companyId}/employees/{id}
-        //[ServiceFilter(typeof(ValidationFilterAttribute))]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> UpdateEmployeeForCompany
                     (Guid companyId,
                     Guid id,

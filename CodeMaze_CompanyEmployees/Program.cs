@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Presentation.ActionFilters;
 using Service.DataShaping;
 using Shared.DataTransferObjects;
+using CodeMaze_CompanyEmployees.Utility;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,6 +58,11 @@ builder.Services.AddControllers(config => {
             .AddXmlDataContractSerializerFormatters()
             .AddCustomCSVFormatter()//to get custom formatted response.. formatcsv()... postman get header accept text/csv
             .AddApplicationPart(typeof(CompanyEmployees.Presentation.AssemblyReference).Assembly);
+
+builder.Services.AddCustomMediaTypes();//as part of hateoas configuration
+builder.Services.AddScoped<ValidateMediaTypeAttribute>();//as part of hateoas/action filter/mediatypevalidation
+builder.Services.AddScoped<IEmployeeLinks, EmployeeLinks>();//as part of hateoas
+
 
 builder.Services.AddAutoMapper(typeof(Program));
 

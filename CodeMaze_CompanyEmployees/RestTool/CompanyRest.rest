@@ -46,3 +46,6 @@ GET {{baseApiUrl}}/3d490a70-94ce-4d15-9494-5248280c2ce3/employees?fields=positio
 
 ### funker godt i postman.. her bringer opp uventede properties og.
 GET https://localhost:7165/api/companies/3d490a70-94ce-4d15-9494-5248280c2ce3/employees?pageNumber=2&pageSize=3&minAge=26&maxAge=34&searchTerm=A&orderBy=name desc&fields=name,position
+### hateoas 
+GET https://localhost:7165/api/companies/3d490a70-94ce-4d15-9494-5248280c2ce3/employees?pageNumber=2&pageSize=3&minAge=26&maxAge=34&searchTerm=A&orderBy=age asc
+Accept:application/vnd.codemaze.hateoas+json

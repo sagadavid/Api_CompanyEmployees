@@ -1,4 +1,5 @@
-﻿using Entities.Models;
+﻿using Entities.LinkModels;
+using Entities.Models;
 using Shared.DataTransferObjects;
 using Shared.RequestFeatures;
 using System;
@@ -12,18 +13,10 @@ namespace Service.Contracts
 {
     public interface IEmployeeService
     {
-        //Task <IEnumerable<EmployeeDto>> GetEmployeesAsync
-        //    (Guid companyId, 
-        //    EmployeeParameters employeeParameters,
-        //    bool trackChanges);
-
-        //Task<(IEnumerable<EmployeeDto> employees, MetaData metaData)> GetEmployeesAsync
-        //    (Guid companyId, EmployeeParameters employeeParameters, bool trackChanges);//Now our method returns
-        //                                                                               //a Tuple containing two fields – employees and metadata.
-
-        //for the sake of datashaping
-        Task<(IEnumerable<Entity> employees, MetaData metaData)> GetEmployeesAsync
-            (Guid companyId, EmployeeParameters employeeParameters, bool trackChanges);
+        //Now the Tuple return type has the LinkResponse as the first field and also
+        //we have LinkParameters as the second parameter.
+        Task<(LinkResponse linkResponse, MetaData metaData)> GetEmployeesAsync
+            (Guid companyId, LinkParameters linkParameters, bool trackChanges);
 
         Task <EmployeeDto> GetEmployeeByIdAsync
             (Guid companyId, 

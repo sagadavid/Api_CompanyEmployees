@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Shared.RequestFeatures;
 using Service.DataShaping;
 using System.Dynamic;
+using Entities.LinkModels;
 
 namespace Service
 {
@@ -23,19 +24,16 @@ namespace Service
         private readonly IRepositoryManager _repositoryManager;
         private readonly ILoggerManager _logMan;
         private readonly IMapper _mapper;
-        private readonly IDataShaper<EmployeeDto> _dataShaper;
+        private readonly IEmployeeLinks _employeeLinks;
 
-        public
-            EmployeeService
-                    (IRepositoryManager repositoryManager,
-                     ILoggerManager logMan,
-                     IMapper mapper, 
-                     IDataShaper<EmployeeDto> dataShaper)
+        public EmployeeService
+            (IRepositoryManager repositoryManager, ILoggerManager logMan,
+            IMapper mapper, IEmployeeLinks employeeLinks)
         {
             _repositoryManager = repositoryManager;
             _logMan = logMan;
             _mapper = mapper;
-            _dataShaper = dataShaper;
+            _employeeLinks = employeeLinks;
         }
 
         public async Task
@@ -62,45 +60,28 @@ namespace Service
 
         }
 
-        //public async Task
-        //    <IEnumerable<EmployeeDto>>
-        //        GetEmployeesAsync
-        //            (Guid companyId,
-        //            EmployeeParameters employeeParameters,
-        //            bool trackChanges)
-
-        //public async Task<(IEnumerable<EmployeeDto> employees, MetaData metaData)> GetEmployeesAsync
-        //    (Guid companyId, EmployeeParameters employeeParameters, bool trackChanges)
-
-        //for the sake of datashaping
-        public async Task<(IEnumerable <Entity> employees, MetaData metaData)>GetEmployeesAsync
-            (Guid companyId, EmployeeParameters employeeParameters, bool trackChanges)
+        /* First, we don’t have the DataShaper injected anymore since this logic is now inside the
+         * EmployeeLinks class. Then, we change the method signature, fix a couple of errors since 
+         * now we have linkParameters and not employeeParameters as a parameter, and we call the 
+         * TryGenerateLinks method, which will return LinkResponse as a result.
+         * Finally, we construct our Tuple and return it to the caller. */
+        
+        public async Task<(LinkResponse linkResponse, MetaData metaData)> GetEmployeesAsync 
+            (Guid companyId, LinkParameters linkParameters, bool trackChanges)
         {
-            if (!employeeParameters.ValidAgeRange) throw new MaxAgeRangeBadRequestException();
+            if (!linkParameters.EmployeeParameters.ValidAgeRange) throw new MaxAgeRangeBadRequestException();
 
             await CheckIfCompanyExists(companyId, trackChanges);
 
-            //select employees depending company id
-            //var employeesFromDb =
-            //        await _repositoryManager.EmployeeRepo
-            //        .GetEmployeesAsync(companyId, employeeParameters, trackChanges);
-            ////map each employee to enumetable dto
-            //var employeesDto =
-            //        _mapper.Map<IEnumerable<EmployeeDto>>(employeesFromDb);
+            var employeesWithMetaData = await _repositoryManager.EmployeeRepo.GetEmployeesAsync
+                (companyId, linkParameters.EmployeeParameters,trackChanges);
 
-            //return employeesDto;
-
-            //pagelist-metadata added
-            var employeesWithMetaData = await _repositoryManager.EmployeeRepo
-                .GetEmployeesAsync(companyId, employeeParameters, trackChanges);
             var employeesDto =
             _mapper.Map<IEnumerable<EmployeeDto>>(employeesWithMetaData);
+            var links = _employeeLinks.TryGenerateLinks
+                (employeesDto,linkParameters.EmployeeParameters.Fields,companyId, linkParameters.Context);
 
-            var shapedData = _dataShaper.ShapeData(employeesDto,employeeParameters.Fields);
-
-            //return (employees: employeesDto, metaData: employeesWithMetaData.MetaData);
-
-            return (employees: shapedData, metaData: employeesWithMetaData.MetaData);
+            return (linkResponse: links, metaData: employeesWithMetaData.MetaData);
 
         }
 

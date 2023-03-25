@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using System.Xml;
-
+using Entities.LinkModels;
+//xml serilization problem... explanations at the end
 namespace Entities.Models
 {
     public class Entity : DynamicObject, IXmlSerializable, IDictionary<string, object>
@@ -72,13 +73,6 @@ namespace Entities.Models
                 var value = _expando[key];
                 WriteLinksToXml(key, value, writer);
             }
-        }
-
-        private void WriteLinksToXml(string key, object value, XmlWriter writer)
-        {
-            writer.WriteStartElement(key);
-            writer.WriteString(value.ToString());
-            writer.WriteEndElement();
         }
 
         public void Add(string key, object value)
@@ -167,5 +161,47 @@ namespace Entities.Models
         {
             return GetEnumerator();
         }
+
+        //Since our response will contain links too, we need to extend the XML serialization rules
+        //so that our XML response returns the properly formatted links.
+        private void WriteLinksToXml(string key, object value, XmlWriter writer)
+        {
+            writer.WriteStartElement(key);
+            if (value.GetType() == typeof(List<Link>))
+            {//So, we check if the type is List<Link> . If it is, we iterate through all the links and
+             //call the method recursively for each of the properties: href, method, and rel.
+                foreach (var val in value as List<Link>)
+                {
+                    writer.WriteStartElement(nameof(Link));
+                    WriteLinksToXml(nameof(val.Href), val.Href, writer);
+                    WriteLinksToXml(nameof(val.Method), val.Method, writer);
+                    WriteLinksToXml(nameof(val.Rel), val.Rel, writer);
+                    writer.WriteEndElement();
+                }
+            }
+            else
+            {
+                writer.WriteString(value.ToString());
+            }
+            writer.WriteEndElement();
+        }
     }
 }
+
+/* https://localhost:7165/api/companies/3d490a70-94ce-4d15-9494-5248280c2ce3/employees?pageNumber=1&pageSize=3&minAge=26&maxAge=34&searchTerm=ae&orderBy=name desc&fields=name,position 
+ * Let’s send the same request one more time, but this time with the
+
+different accept header (text/xml):
+It works — but it looks pretty ugly and unreadable. But that’s how the
+
+XmlDataContractSerializerOutputFormatter serializes our ExpandoObject by default.
+
+We can fix that, but the logic is out of the scope of this book. Of course, we have implemented the solution in our source code. So, if you want, you can use it in your project.
+
+All you have to do is to create the Entity class and copy the content from our Entity class that resides in the Entities/Models folder.
+
+After that, just modify the IDataShaper interface and the DataShaper class by using the Entity type instead of the ExpandoObject type. Also, you have to do the same thing for the IEmployeeService interface and the EmployeeService class. Again, you can check our implementation if you have any problems.
+
+After all those changes, once we send the same request, we are going to see a much better result:
+If XML serialization is not important to you, you can keep using ExpandoObject — but if you want a nicely formatted XML response, this is the way to go.
+ */

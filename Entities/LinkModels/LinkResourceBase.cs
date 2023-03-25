@@ -6,13 +6,9 @@ using System.Threading.Tasks;
 
 namespace Entities.LinkModels
 {
-    public class LinkResourceBase
+    public class LinkResourceBase//will contain all of our links 
     {
-
-        public LinkResourceBase()
-        { }
-
+        public LinkResourceBase(){ }
         public List<Link> Links { get; set; } = new List<Link>();
-
     }
 }

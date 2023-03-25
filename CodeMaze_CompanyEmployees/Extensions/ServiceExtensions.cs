@@ -4,6 +4,8 @@ using Repository;
 using Service.Contracts;
 using Service;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CodeMaze_CompanyEmployees.Extensions
 {
@@ -72,5 +74,35 @@ namespace CodeMaze_CompanyEmployees.Extensions
             builder.AddMvcOptions(config => config.OutputFormatters.Add(new
             CsvOutputFormatter()));
 
+        //registering custom media type for hateoas
+        public static void AddCustomMediaTypes(this IServiceCollection services)
+        {
+            services.Configure<MvcOptions>(config =>
+            {
+                var systemTextJsonOutputFormatter = config.OutputFormatters
+                .OfType<SystemTextJsonOutputFormatter>()?.FirstOrDefault();
+                if (systemTextJsonOutputFormatter != null)
+                {
+                    systemTextJsonOutputFormatter.SupportedMediaTypes
+                    .Add("application/vnd.codemaze.hateoas+json");
+                    /* • vnd – vendor prefix; it’s always there.
+                     * • codemaze – vendor identifier; we’ve chosen codemaze, because why not?
+                     * • hateoas – media type name.
+                     * • json – suffix; we can use it to describe if we want json or an XML response, 
+                     * for example. */
+                }
+
+                var xmlOutputFormatter = config.OutputFormatters
+                .OfType<XmlDataContractSerializerOutputFormatter>()?
+                .FirstOrDefault();
+                if (xmlOutputFormatter != null)
+                {
+                    xmlOutputFormatter.SupportedMediaTypes
+                    .Add("application/vnd.codemaze.hateoas+xml");
+                }//We are registering two new custom media types for the JSON and XML output formatters.
+                 //This ensures we don’t get a 406 Not Acceptable response.
+            });
+
+        }
     }
 }

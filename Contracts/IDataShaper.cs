@@ -15,10 +15,12 @@ namespace Contracts
         //entity and one for the collection of entities.Both are named ShapeData ,
         //but they have different signatures.
 
-        IEnumerable<Entity> ShapeData(IEnumerable<T> entities, string fieldsString);
+        IEnumerable<ShapedEntity> ShapeData(IEnumerable<T> entities, string fieldsString);
 
-        Entity ShapeData(T entity, string fieldsString);
-
+        ShapedEntity ShapeData(T entity, string fieldsString);
+        //notice ... expandoObject-> Entity-> ShapedEntity
+        //we have to modify the IDataShaper interface and the DataShaper class by replacing
+        //all Entity usage with ShapedEntity .
 
 
     }
