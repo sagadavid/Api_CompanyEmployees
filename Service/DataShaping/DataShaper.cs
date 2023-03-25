@@ -1,4 +1,5 @@
 ﻿using Contracts;
+using Entities.Models;
 using System.Dynamic;
 using System.Reflection;
 
@@ -21,17 +22,17 @@ namespace Service.DataShaping
 
         }
 
-        public IEnumerable<ExpandoObject> ShapeData(IEnumerable<T> entities, string fieldsString)
+        public IEnumerable<Entity> ShapeData(IEnumerable<T> entities, string fieldsString)
 
         {
-            var requiredProperties = GetRequiredProperties//to parse the input string that contains the fields we want to fetch.
-                (fieldsString);
+            var requiredProperties = GetRequiredProperties(fieldsString);//to parse the input string that contains the fields we want to fetch.
+
 
             return FetchData(entities, requiredProperties);
 
         }
 
-        public ExpandoObject ShapeData(T entity, string fieldsString)
+        public Entity ShapeData(T entity, string fieldsString)
 
         {
 
@@ -44,7 +45,7 @@ namespace Service.DataShaping
         //the properties we need to return to the controller:
         private IEnumerable<PropertyInfo> GetRequiredProperties(string fieldsString)
 
-        {
+        {//property info Discovers the attributes of a property and provides access to property metadata.
 
             var requiredProperties = new List<PropertyInfo>();
 
@@ -58,9 +59,8 @@ namespace Service.DataShaping
 
                 {
 
-                    var property = Properties
-
-                    .FirstOrDefault(pi => pi.Name.Equals(field.Trim(), StringComparison.InvariantCultureIgnoreCase));
+                    var property = Properties.FirstOrDefault(pi => 
+                    pi.Name.Equals(field.Trim(), StringComparison.InvariantCultureIgnoreCase));
 
                     if (property == null)
 
@@ -84,13 +84,12 @@ namespace Service.DataShaping
 
         }
 
-        private IEnumerable<ExpandoObject> FetchData(IEnumerable<T> entities,
-
-        IEnumerable<PropertyInfo> requiredProperties)
+        private IEnumerable<Entity> FetchData
+            (IEnumerable<T> entities, IEnumerable<PropertyInfo> requiredProperties)
 
         {
 
-            var shapedData = new List<ExpandoObject>();
+            var shapedData = new List<Entity>();
 
             foreach (var entity in entities)
 
@@ -105,13 +104,15 @@ namespace Service.DataShaping
             return shapedData;
 
         }
-        //FetchData and FetchDataForEntity are the private methods to extract the values from these required properties we’ve prepared.
-        private ExpandoObject FetchDataForEntity(T entity, IEnumerable<PropertyInfo>requiredProperties)
+
+        //FetchData and FetchDataForEntity are the private methods to extract the values
+        //from these required properties we’ve prepared.
+        private Entity FetchDataForEntity(T entity, IEnumerable<PropertyInfo>requiredProperties)
 
         {//ExpandoObject implements IDictionary<string,object> , so we can use the TryAdd method to add our
          //property using its name as a key and the value as a value for the dictionary.
 
-            var shapedObject = new ExpandoObject();
+            var shapedObject = new Entity();
             foreach (var property in requiredProperties)
 
             {

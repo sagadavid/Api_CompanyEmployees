@@ -22,7 +22,7 @@ namespace Service.Contracts
         //                                                                               //a Tuple containing two fields – employees and metadata.
 
         //for the sake of datashaping
-        Task<(IEnumerable<ExpandoObject> employees, MetaData metaData)> GetEmployeesAsync
+        Task<(IEnumerable<Entity> employees, MetaData metaData)> GetEmployeesAsync
             (Guid companyId, EmployeeParameters employeeParameters, bool trackChanges);
 
         Task <EmployeeDto> GetEmployeeByIdAsync
