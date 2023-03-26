@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using NPOI.SS.Formula.Functions;
 using System;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using CompanyEmployees.Presentation.Controllers;
+using Presentation.Controllers;
 
 namespace CodeMaze_CompanyEmployees.Extensions
 {
@@ -118,6 +120,15 @@ namespace CodeMaze_CompanyEmployees.Extensions
 
                 opt.ApiVersionReader = new HeaderApiVersionReader("api-version");//versioning by http header
                 opt.ApiVersionReader = new QueryStringApiVersionReader("api-version");//to support query string versioning 
+
+                //If we have a lot of versions of a single controller,
+                //we can assign these versions in the configuration instead
+                //Now, we can remove the [ApiVersion] attribute from the controllers.
+                opt.Conventions.Controller<CompaniesController>()
+                        .HasApiVersion(new ApiVersion(1, 0));
+                opt.Conventions.Controller<CompaniesV2Controller>()
+                        .HasDeprecatedApiVersion(new ApiVersion(2, 0));
+
             });
 
         }

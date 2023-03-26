@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Presentation.Controllers
 {
-    [ApiVersion("2.0", Deprecated = true)]
+    //[ApiVersion("2.0", Deprecated = true)]//no need to use when version by convention is added in extension method
     //[Route("api/{v:apiversion}/companies")]//versioning by url
     //[Route("api/companies")]//versioning by query string
     [Route("api/companies")]//versioning by http header
