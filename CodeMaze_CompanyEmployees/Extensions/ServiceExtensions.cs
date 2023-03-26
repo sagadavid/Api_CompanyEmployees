@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc;
 using NPOI.SS.Formula.Functions;
 using System;
+using Microsoft.AspNetCore.Mvc.Versioning;
 
 namespace CodeMaze_CompanyEmployees.Extensions
 {
@@ -115,6 +116,8 @@ namespace CodeMaze_CompanyEmployees.Extensions
                                                              //Therefore, if a clientdoesn’t state the required version,
                                                              //our API will use
 
+                opt.ApiVersionReader = new HeaderApiVersionReader("api-version");//versioning by http header
+                opt.ApiVersionReader = new QueryStringApiVersionReader("api-version");//to support query string versioning 
             });
 
         }
