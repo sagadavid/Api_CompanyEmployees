@@ -25,7 +25,7 @@ namespace Presentation.Controllers
             _serviceManager = serviceManager;
 
         [HttpGet]
-        //public async Task<IActionResult> GetEmployeesForCompany(Guid companyId)
+        [HttpHead]//The Head is identical to Get but without a response body. This type of request could be used to obtain information about validity, accessibility, and recent modifications of the resource.
         public async Task<IActionResult> GetEmployeesForCompany
             (Guid companyId, [FromQuery] EmployeeParameters employeeParameters)
         {

@@ -2,7 +2,7 @@
 # we can define variables to use in the rest query
 @newlyPostedEmployeeId=1a513ea6-5655-4665-6adf-08db2b2274c2
 @baseUri=https://localhost:7165/api/companies
-@testEmployee={{baseUri}}/3d490a70-94ce-4d15-9494-5248280c2ce3/employees?
+@testEmployee={{baseUri}}/3d490a70-94ce-4d15-9494-5248280c2ce3/employees
 
 # get all employees
 GET {{baseUri}}/3d490a70-94ce-4d15-9494-5248280c2ce3/employees?pageNumber=3&pageSize=3
@@ -51,5 +51,6 @@ GET {{testEmployee}}/pageNumber=2&pageSize=3&minAge=26&maxAge=34&searchTerm=A&or
 ### able to get options in header 
 OPTIONS {{baseUri}}
 
-###
+### GETS HEAD RESPONSE AS 1 AND HEADER PAGINATION AS EXPECTED
+HEAD {{testEmployee}}
 

@@ -109,7 +109,7 @@ namespace CompanyEmployees.Presentation.Controllers
         [HttpOptions]
         public IActionResult GetCompaniesOptions()
         {
-            Response.Headers.Add("Allow", "GET, OPTIONS, POST");
+            Response.Headers.Add("Allow", "GET, OPTIONS, POST, PUT, PATCH, DELETE");
             return Ok();
         }
 
