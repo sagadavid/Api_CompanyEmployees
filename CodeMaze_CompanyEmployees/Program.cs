@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Presentation.ActionFilters;
 using Service.DataShaping;
 using Shared.DataTransferObjects;
+using AspNetCoreRateLimit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -77,6 +78,9 @@ builder.Services.ConfigureVersioning();//versioning after package og extenion me
 builder.Services.ConfigureResponseCaching();//adding cash store
 builder.Services.ConfigureHttpCacheHeaders();//for marvin.cash.header package
 
+builder.Services.AddMemoryCache();//for aspnetcoretatelimit library to go on
+builder.Services.ConfigureRateLimitingOptions();//after extension method... for aspnetcoretatelimit library to go on
+builder.Services.AddHttpContextAccessor();//after extension mehtod.. for aspnetcoretatelimit library to go on
 
 var app = builder.Build();
 
@@ -109,6 +113,7 @@ ForwardedHeaders=ForwardedHeaders.All//headers matching,
                     //request vs proxy
 });
 
+app.UseIpRateLimiting();//after extension mehtod.. for aspnetcoretatelimit library to go on
 app.UseCors("CorsPolicy");//which we chose/defined
 app.UseResponseCaching();//adding cash store.. place just after cors
 app.UseHttpCacheHeaders();//for marvin.cash.header package

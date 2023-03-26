@@ -84,3 +84,9 @@ GET {{testCompany}}
 
 ### cashing test 
 GET {{testEmployees}}
+
+### cash expiration&validation test-done as well
+
+### ratelimit test
+GET {{baseUri}}
+# Status code: 429 (429) -- Retry-After: 119 -- API calls quota exceeded! maximum admitted 3 per 5m.
