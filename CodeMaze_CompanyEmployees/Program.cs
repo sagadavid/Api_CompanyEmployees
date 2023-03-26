@@ -53,6 +53,8 @@ builder.Services.AddControllers(config => {
                                            * This will make our application more restrictive and force the API consumer to request only the types the server supports. The 406 status code is created for this purpose.*/
     
     config.InputFormatters.Insert(0, GetJsonPatchInputFormatter());//We are placing our JsonPatchInputFormatter at the index 0 in the InputFormatters list.
+    config.CacheProfiles.Add("120SecondsDuration", new CacheProfile//enable cashing for multiple kinds of (for filters etc) attributes
+    {Duration =120});
 })
             .AddXmlDataContractSerializerFormatters()
             .AddCustomCSVFormatter()//to get custom formatted response.. formatcsv()... postman get header accept text/csv
@@ -72,7 +74,7 @@ NewtonsoftJsonPatchInputFormatter GetJsonPatchInputFormatter() =>
 builder.Services.AddScoped<IDataShaper<EmployeeDto>, DataShaper<EmployeeDto>>();
 
 builder.Services.ConfigureVersioning();//versioning after package og extenion method
-
+builder.Services.ConfigureResponseCaching();//adding cash store
 
 
 var app = builder.Build();
@@ -107,7 +109,7 @@ ForwardedHeaders=ForwardedHeaders.All//headers matching,
 });
 
 app.UseCors("CorsPolicy");//which we chose/defined
-
+app.UseResponseCaching();//adding cash store.. place just after cors
 app.UseAuthorization();
 
 //adds endpoints for controller actions without specifying any routes.

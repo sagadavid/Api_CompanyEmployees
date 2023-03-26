@@ -132,5 +132,9 @@ namespace CodeMaze_CompanyEmployees.Extensions
             });
 
         }
+
+        //after cashing is enabled, a cash store is needed
+        public static void ConfigureResponseCaching(this IServiceCollection services) =>
+                services.AddResponseCaching();
     }
 }

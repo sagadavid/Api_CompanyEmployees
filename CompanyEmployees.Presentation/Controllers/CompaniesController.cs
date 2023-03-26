@@ -16,6 +16,7 @@ namespace CompanyEmployees.Presentation.Controllers
         public CompaniesController(IServiceManager serviceManager) => _serviceManger = serviceManager;
 
         [HttpGet(Name ="GetCompanies")]
+        [ResponseCache(CacheProfileName = "120SecondsDuration")]//configured in program.cs
         public async Task<IActionResult> GetCompanies()//when we async modify, dont need to add to method names in controller
         {
             /*no need for try-catch, after error hanler middleware added*/
@@ -30,6 +31,7 @@ namespace CompanyEmployees.Presentation.Controllers
         }
 
         [HttpGet("{companyId:guid}", Name = "GetCompanyById")]
+        [ResponseCache(Duration = 60)]//cashing by attribute
         public async Task<IActionResult> GetCompany(Guid companyId)
         {
             var company =await _serviceManger.CompanyService
