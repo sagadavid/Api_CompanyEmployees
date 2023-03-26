@@ -71,6 +71,10 @@ NewtonsoftJsonPatchInputFormatter GetJsonPatchInputFormatter() =>
 
 builder.Services.AddScoped<IDataShaper<EmployeeDto>, DataShaper<EmployeeDto>>();
 
+builder.Services.ConfigureVersioning();//versioning after package og extenion method
+
+
+
 var app = builder.Build();
 
 /*It is important to know that we have to extract the ILoggerManager service 

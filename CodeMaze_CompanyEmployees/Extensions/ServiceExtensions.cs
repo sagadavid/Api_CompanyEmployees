@@ -6,6 +6,8 @@ using Service;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc;
+using NPOI.SS.Formula.Functions;
+using System;
 
 namespace CodeMaze_CompanyEmployees.Extensions
 {
@@ -34,17 +36,7 @@ namespace CodeMaze_CompanyEmployees.Extensions
 
         public static void ConfigureLoggerService(this IServiceCollection services) =>
          services.AddSingleton<ILoggerManager, LoggerManager>();
-        //result : C:\Users\SAGAWIN\source\repos\sagadavid\Api_CompanyEmployees\CodeMaze_CompanyEmployees\bin\Debug\net6.0\logs
-        /*  2023-02-07 15:36:00.2264 INFO Here is info message from our values controller.
-            2023-02-07 15:36:00.2739 DEBUG Here is debug message from our values controller.
-            2023-02-07 15:36:00.2739 WARN Here is warn message from our values controller.
-            2023-02-07 15:36:00.2739 ERROR Here is an error message from our values controller.
-            2023-02-07 15:59:39.3972 INFO Here is info message from our values controller.
-            2023-02-07 15:59:39.4272 DEBUG Here is debug message from our values controller.
-            2023-02-07 15:59:39.4413 WARN Here is warn message from our values controller.
-            2023-02-07 15:59:39.4413 ERROR Here is an error message from our values controller.*/
-        //https://localhost:7165/weatherforecast
-        //["value1","value2"]
+
 
         /*after repository manager and modifying service extension, 
          * The repository layer is prepared and ready to be used to 
@@ -103,6 +95,28 @@ namespace CodeMaze_CompanyEmployees.Extensions
                     .Add("application/vnd.codemaze.apiroot+xml");
                 }
             });
+        }
+
+        //
+        public static void ConfigureVersioning(this IServiceCollection services)
+
+        {
+
+            services.AddApiVersioning(opt =>
+
+            {
+
+                opt.ReportApiVersions = true;//adds the API version to the response header.
+
+                opt.AssumeDefaultVersionWhenUnspecified = true;
+
+                opt.DefaultApiVersion = new ApiVersion(1, 0);//we configured versioning to use 1.0 as a default
+                                                             //API version (opt.AssumeDefaultVersionWhenUnspecified = true;).
+                                                             //Therefore, if a clientdoesn’t state the required version,
+                                                             //our API will use
+
+            });
+
         }
     }
 }

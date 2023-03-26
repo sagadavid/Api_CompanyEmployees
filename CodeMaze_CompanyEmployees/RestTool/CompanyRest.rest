@@ -55,6 +55,13 @@ OPTIONS {{baseUri}}
 ### GETS HEAD RESPONSE AS 1 AND HEADER PAGINATION AS EXPECTED
 HEAD {{testEmployee}}
 
-### root document, type validation in header disabled
+### root document (type validation check needs skipped for postman to function)
 GET {{root}}
+Accept:application/application/vnd.codemaze.apiroot+json
+
+### versioning by query string -- gets controller v2 
+GET {{baseUri}}?api-version=2.0
+
+### versioning by url -- gets controller v2
+GET {{root}}/2.0/companies
 
