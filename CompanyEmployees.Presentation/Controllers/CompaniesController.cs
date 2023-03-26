@@ -15,7 +15,7 @@ namespace CompanyEmployees.Presentation.Controllers
 
         public CompaniesController(IServiceManager serviceManager) => _serviceManger = serviceManager;
 
-        [HttpGet]
+        [HttpGet(Name ="GetCompanies")]
         public async Task<IActionResult> GetCompanies()//when we async modify, dont need to add to method names in controller
         {
             /*no need for try-catch, after error hanler middleware added*/
@@ -37,7 +37,7 @@ namespace CompanyEmployees.Presentation.Controllers
             return Ok(company);
         }
 
-        [HttpPost]
+        [HttpPost(Name = "CreateCompany")]
         //[ServiceFilter(typeof(ValidationFilterAttribute))]//validation instead if company checks below
         public async Task<IActionResult> CreateCompany([FromBody] CompanyForCreationDto company)
         {

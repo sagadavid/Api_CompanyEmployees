@@ -25,7 +25,7 @@ namespace Presentation.Controllers
             _serviceManager = serviceManager;
 
         [HttpGet]
-        [HttpHead]//The Head is identical to Get but without a response body. This type of request could be used to obtain information about validity, accessibility, and recent modifications of the resource.
+        [HttpHead]//The Head is identical to Get but without a response body. This type of request could be used to obtain information about validity, accessibility, and recent modifications of the resource.we receive a 200 OK status code with the empty body BUT WITH PAGINATION.
         public async Task<IActionResult> GetEmployeesForCompany
             (Guid companyId, [FromQuery] EmployeeParameters employeeParameters)
         {

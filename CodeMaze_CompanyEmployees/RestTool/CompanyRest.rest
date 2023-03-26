@@ -3,6 +3,7 @@
 @newlyPostedEmployeeId=1a513ea6-5655-4665-6adf-08db2b2274c2
 @baseUri=https://localhost:7165/api/companies
 @testEmployee={{baseUri}}/3d490a70-94ce-4d15-9494-5248280c2ce3/employees
+@root=https://localhost:7165/api/
 
 # get all employees
 GET {{baseUri}}/3d490a70-94ce-4d15-9494-5248280c2ce3/employees?pageNumber=3&pageSize=3
@@ -53,4 +54,7 @@ OPTIONS {{baseUri}}
 
 ### GETS HEAD RESPONSE AS 1 AND HEADER PAGINATION AS EXPECTED
 HEAD {{testEmployee}}
+
+### root document, type validation in header disabled
+GET {{root}}
 
