@@ -75,6 +75,7 @@ builder.Services.AddScoped<IDataShaper<EmployeeDto>, DataShaper<EmployeeDto>>();
 
 builder.Services.ConfigureVersioning();//versioning after package og extenion method
 builder.Services.ConfigureResponseCaching();//adding cash store
+builder.Services.ConfigureHttpCacheHeaders();//for marvin.cash.header package
 
 
 var app = builder.Build();
@@ -110,6 +111,8 @@ ForwardedHeaders=ForwardedHeaders.All//headers matching,
 
 app.UseCors("CorsPolicy");//which we chose/defined
 app.UseResponseCaching();//adding cash store.. place just after cors
+app.UseHttpCacheHeaders();//for marvin.cash.header package
+
 app.UseAuthorization();
 
 //adds endpoints for controller actions without specifying any routes.

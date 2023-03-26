@@ -74,4 +74,13 @@ api-version:2.0
 GET {{testCompany}}
 # Cache-Control header was created with a public cache and a duration of 60 seconds. But as we said, this is just a header; we need a cache-store to cache the response.
 
+### cashing test 
+GET {{baseUri}}
+# We can see that we have all the required headers generated. The default expiration is set to 60 seconds and if we send this request one more time, we are going to get an additional Age header.
+# cashe control, etag, expires, last modified, transfer encoding, vary
 
+### cashing test 
+GET {{testCompany}}
+
+### cashing test 
+GET {{testEmployees}}

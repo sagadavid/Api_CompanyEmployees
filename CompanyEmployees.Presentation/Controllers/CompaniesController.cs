@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Marvin.Cache.Headers;
+using Microsoft.AspNetCore.Mvc;
+using NPOI.SS.Formula.Functions;
 using Presentation.ActionFilters;
 using Presentation.ModelBinders;
 using Service.Contracts;
@@ -16,7 +18,9 @@ namespace CompanyEmployees.Presentation.Controllers
         public CompaniesController(IServiceManager serviceManager) => _serviceManger = serviceManager;
 
         [HttpGet(Name ="GetCompanies")]
-        [ResponseCache(CacheProfileName = "120SecondsDuration")]//configured in program.cs
+        //[ResponseCache(CacheProfileName = "120SecondsDuration")]//configured in program.cs..now, this cache rule
+                                                                //will apply to all the actions inside the controller EXCEPT
+                                                                //the ones that already have the ResponseCache attribute applied.
         public async Task<IActionResult> GetCompanies()//when we async modify, dont need to add to method names in controller
         {
             /*no need for try-catch, after error hanler middleware added*/
@@ -31,7 +35,10 @@ namespace CompanyEmployees.Presentation.Controllers
         }
 
         [HttpGet("{companyId:guid}", Name = "GetCompanyById")]
-        [ResponseCache(Duration = 60)]//cashing by attribute
+        //[ResponseCache(Duration = 60)]//cashing by attribute // commented for marvin.cash.header to work
+        //local cashing(attribute) overrrides the global one ! example below..
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 60)]
+        [HttpCacheValidation(MustRevalidate = false)]
         public async Task<IActionResult> GetCompany(Guid companyId)
         {
             var company =await _serviceManger.CompanyService

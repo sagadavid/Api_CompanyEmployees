@@ -11,6 +11,7 @@ using System;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using CompanyEmployees.Presentation.Controllers;
 using Presentation.Controllers;
+using Marvin.Cache.Headers;
 
 namespace CodeMaze_CompanyEmployees.Extensions
 {
@@ -136,5 +137,18 @@ namespace CodeMaze_CompanyEmployees.Extensions
         //after cashing is enabled, a cash store is needed
         public static void ConfigureResponseCaching(this IServiceCollection services) =>
                 services.AddResponseCaching();
+
+        //Configuration for marvin.cashe.headers
+        //globally configure expiration and validation
+        public static void ConfigureHttpCacheHeaders(this IServiceCollection services) =>
+        services.AddHttpCacheHeaders((expirationOpt) =>
+        {
+            expirationOpt.MaxAge = 65;
+            expirationOpt.CacheLocation = CacheLocation.Private;
+        },
+        (validationOpt) =>
+        {
+            validationOpt.MustRevalidate = true;
+        });
     }
 }
