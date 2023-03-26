@@ -1,12 +1,13 @@
 ### this is a line break
 # we can define variables to use in the rest query
 @newlyPostedEmployeeId=1a513ea6-5655-4665-6adf-08db2b2274c2
-@baseApiUrl=https://localhost:7165/api/companies
+@baseUri=https://localhost:7165/api/companies
+@testEmployee={{baseUri}}/3d490a70-94ce-4d15-9494-5248280c2ce3/employees?
 
 # get all employees
-GET {{baseApiUrl}}/3d490a70-94ce-4d15-9494-5248280c2ce3/employees?pageNumber=3&pageSize=3
+GET {{baseUri}}/3d490a70-94ce-4d15-9494-5248280c2ce3/employees?pageNumber=3&pageSize=3
 ###
-POST {{baseApiUrl}}/3d490a70-94ce-4d15-9494-5248280c2ce3/employees/
+POST {{baseUri}}/3d490a70-94ce-4d15-9494-5248280c2ce3/employees/
 Content-Type: application/json
 
 {
@@ -16,7 +17,7 @@ Content-Type: application/json
 
 }
 ###
-PUT {{baseApiUrl}}/3d490a70-94ce-4d15-9494-5248280c2ce3/employees/{{newlyPostedEmployeeId}}
+PUT {{baseUri}}/3d490a70-94ce-4d15-9494-5248280c2ce3/employees/{{newlyPostedEmployeeId}}
 Content-Type: application/json
 
 {
@@ -26,23 +27,29 @@ Content-Type: application/json
 }
 
 ###
-GET {{baseApiUrl}}/3d490a70-94ce-4d15-9494-5248280c2ce3/employees/{{newlyPostedEmployeeId}}
+GET {{baseUri}}/3d490a70-94ce-4d15-9494-5248280c2ce3/employees/{{newlyPostedEmployeeId}}
 ###
 # recheck patch newtonjson etc..
-PATCH {{baseApiUrl}}/3d490a70-94ce-4d15-9494-5248280c2ce3/employees/{{newlyPostedEmployeeId}}
+PATCH {{baseUri}}/3d490a70-94ce-4d15-9494-5248280c2ce3/employees/{{newlyPostedEmployeeId}}
 Content-Type:application/json
 
 {
 "age":"18"
 }
 ### search term added 
-GET {{baseApiUrl}}/3d490a70-94ce-4d15-9494-5248280c2ce3/employees?pageNumber=2&pageSize=2&searchTerm=m
+GET {{baseUri}}/3d490a70-94ce-4d15-9494-5248280c2ce3/employees?pageNumber=2&pageSize=2&searchTerm=m
 
 ### orderby added
-GET {{baseApiUrl}}/3d490a70-94ce-4d15-9494-5248280c2ce3/employees?pageNumber=3&pageSize=2&searchTerm=m&orderBy=name,age desc
+GET {{baseUri}}/3d490a70-94ce-4d15-9494-5248280c2ce3/employees?pageNumber=3&pageSize=2&searchTerm=m&orderBy=name,age desc
 
 ### datashaping.. only positions data is requested !!
-GET {{baseApiUrl}}/3d490a70-94ce-4d15-9494-5248280c2ce3/employees?fields=position
+GET {{baseUri}}/3d490a70-94ce-4d15-9494-5248280c2ce3/employees?fields=position
 
-### funker godt i postman.. her bringer opp uventede properties og.
-GET https://localhost:7165/api/companies/3d490a70-94ce-4d15-9494-5248280c2ce3/employees?pageNumber=2&pageSize=3&minAge=26&maxAge=34&searchTerm=A&orderBy=name desc&fields=name,position
+### her bringer opp uventede properties og.
+GET {{testEmployee}}/pageNumber=2&pageSize=3&minAge=26&maxAge=34&searchTerm=A&orderBy=name desc&fields=name,position
+
+### able to get options in header 
+OPTIONS {{baseUri}}
+
+###
+

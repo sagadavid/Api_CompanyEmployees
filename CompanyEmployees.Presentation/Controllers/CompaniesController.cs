@@ -96,38 +96,21 @@ namespace CompanyEmployees.Presentation.Controllers
                 .UpdateCompanyAsync(id, company, trackChanges: true);
             return NoContent();
 
-            /*company updates, employee ADDS !! check comment in the dto..
-             * postman put 
-             * https://localhost:7165/api/companies/3d490a70-94ce-4d15-9494-5248280c2ce3
-             * put body
-             * {
-                    "name":"company 1",
-                    "address": "312 Forest Avenue", 
-                    "country":"VA 22202 USA",
-                    "employees": [{
-                    "name" : "employee 1",
-                    "age": "77",
-                    "position":"owner"
-                        }]
-                }
-             * postman get 
-             * https://localhost:7165/api/companies/3d490a70-94ce-4d15-9494-5248280c2ce3/EMPLOYEES
-             * response body
-             * [
-                        {
-                            "id": "d8f7f7cb-283a-420b-fcf3-08db1bccd643",
-                            "name": "employee 1",
-                            "age": 77,
-                            "position": "owner"
-                        },
-                        {
-                            "id": "6543ec34-d129-4b73-113e-08db1b4adedf",
-                            "name": "hanri cahnged his age",
-                            "age": 34,
-                            "position": "leder"
-                        }
-                ]
-             */
+        }
+        /* We have to decorate our action with the HttpOptions attribute.
+         * As we said, the available options should be returned in the 
+         * Allow response header, and that is exactly what we are doing here. 
+         * The URI for this action is /api/companies , so we state which actions can be executed for 
+         * that certain URI. Finally, the Options request should return the 200 OK status code. 
+         * We have to understand that the response, if it is empty, must include the content-length 
+         * field with the value of zero. We don’t have to add it by ourselves because ASP.NET Core 
+         * takes care of that for us.*/
+        
+        [HttpOptions]
+        public IActionResult GetCompaniesOptions()
+        {
+            Response.Headers.Add("Allow", "GET, OPTIONS, POST");
+            return Ok();
         }
 
     }
