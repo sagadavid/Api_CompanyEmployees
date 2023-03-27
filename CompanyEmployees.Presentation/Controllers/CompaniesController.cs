@@ -1,10 +1,12 @@
 ﻿using Marvin.Cache.Headers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NPOI.SS.Formula.Functions;
 using Presentation.ActionFilters;
 using Presentation.ModelBinders;
 using Service.Contracts;
 using Shared.DataTransferObjects;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CompanyEmployees.Presentation.Controllers
 {
@@ -19,8 +21,9 @@ namespace CompanyEmployees.Presentation.Controllers
 
         [HttpGet(Name ="GetCompanies")]
         //[ResponseCache(CacheProfileName = "120SecondsDuration")]//configured in program.cs..now, this cache rule
-                                                                //will apply to all the actions inside the controller EXCEPT
-                                                                //the ones that already have the ResponseCache attribute applied.
+        //will apply to all the actions inside the controller EXCEPT
+        //the ones that already have the ResponseCache attribute applied.
+        [Authorize]
         public async Task<IActionResult> GetCompanies()//when we async modify, dont need to add to method names in controller
         {
             /*no need for try-catch, after error hanler middleware added*/
