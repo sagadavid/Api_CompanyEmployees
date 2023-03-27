@@ -13,6 +13,8 @@ using CompanyEmployees.Presentation.Controllers;
 using Presentation.Controllers;
 using Marvin.Cache.Headers;
 using AspNetCoreRateLimit;
+using Entities.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace CodeMaze_CompanyEmployees.Extensions
 {
@@ -170,6 +172,36 @@ namespace CodeMaze_CompanyEmployees.Extensions
             services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
             services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
             services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();
+
         }
+
+        public static void ConfigureIdentity(this IServiceCollection services)
+
+        {
+
+            var builder = services.AddIdentity<User, IdentityRole>(r =>
+
+            {
+
+                r.Password.RequireDigit = true;
+
+                r.Password.RequireLowercase = false;
+
+                r.Password.RequireUppercase = false;
+
+                r.Password.RequireNonAlphanumeric = false;
+
+                r.Password.RequiredLength = 10;
+
+                r.User.RequireUniqueEmail = true;
+
+            })
+
+            .AddEntityFrameworkStores<RepositoryContext>()
+
+            .AddDefaultTokenProviders();
+
+        }
+
     }
 }

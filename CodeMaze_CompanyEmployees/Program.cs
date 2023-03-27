@@ -82,6 +82,9 @@ builder.Services.AddMemoryCache();//for aspnetcoretatelimit library to go on
 builder.Services.ConfigureRateLimitingOptions();//after extension method... for aspnetcoretatelimit library to go on
 builder.Services.AddHttpContextAccessor();//after extension mehtod.. for aspnetcoretatelimit library to go on
 
+builder.Services.AddAuthentication();
+builder.Services.ConfigureIdentity();
+
 var app = builder.Build();
 
 /*It is important to know that we have to extract the ILoggerManager service 
@@ -118,6 +121,7 @@ app.UseCors("CorsPolicy");//which we chose/defined
 app.UseResponseCaching();//adding cash store.. place just after cors
 app.UseHttpCacheHeaders();//for marvin.cash.header package
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 //adds endpoints for controller actions without specifying any routes.
