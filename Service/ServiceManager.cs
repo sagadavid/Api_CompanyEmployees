@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
 using Contracts;
+using Entities.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Service.Contracts;
 using Shared.DataTransferObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Service
 {
@@ -14,25 +12,26 @@ namespace Service
     {
         private readonly Lazy<ICompanyService> _companyService;
         private readonly Lazy<IEmployeeService> _employeeService;
+        private readonly Lazy<IAuthenticationService> _authenticationService;
 
-        public ServiceManager(IRepositoryManager repoMan, ILoggerManager logMan, 
-            IMapper mapper, IDataShaper<EmployeeDto> dataShaper)
+        public ServiceManager(IRepositoryManager repositoryManager,
+            ILoggerManager logger,
+            IMapper mapper,
+            IDataShaper<EmployeeDto> dataShaper,
+            UserManager<User> userManager,
+            IConfiguration configuration)
         {
-            _companyService = new Lazy<ICompanyService>(() => 
-            new CompanyService(repoMan, logMan, mapper));
-
-            _employeeService = new Lazy<IEmployeeService>(() => 
-            new EmployeeService(repoMan, logMan, mapper, dataShaper));
+            _companyService = new Lazy<ICompanyService>(() =>
+                new CompanyService(repositoryManager, logger, mapper));
+            _employeeService = new Lazy<IEmployeeService>(() =>
+                new EmployeeService(repositoryManager, logger, mapper, dataShaper));
+            _authenticationService = new Lazy<IAuthenticationService>(() =>
+                new AuthenticationService(logger, mapper, userManager, configuration));
         }
 
         public ICompanyService CompanyService => _companyService.Value;
         public IEmployeeService EmployeeService => _employeeService.Value;
-
+        public IAuthenticationService AuthenticationService => _authenticationService.Value;
     }
-    /*with all these in place, we have to add the reference from
- * the Service project inside the main project. Since Service is 
- * already referencing Service.Contracts , our main project will have 
- * the same reference as well.
- * and... modify the ServiceExtensions class.. 
- * Then, all we have to do is to modify the Program class*/
+
 }

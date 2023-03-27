@@ -33,6 +33,7 @@ namespace CodeMaze_CompanyEmployees
             CreateMap<EmployeeForUpdateDto, Employee>();
             CreateMap<CompanyForUpdateDto, Company>()
                                                     .ReverseMap();//for patch to work
+            CreateMap<UserForRegistrationDto, User>();//userdto to user
         }
     }
 }
