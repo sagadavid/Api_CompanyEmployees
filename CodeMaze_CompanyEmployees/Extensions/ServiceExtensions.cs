@@ -6,8 +6,6 @@ using Service;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc;
-using NPOI.SS.Formula.Functions;
-using System;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using CompanyEmployees.Presentation.Controllers;
 using Presentation.Controllers;
@@ -15,6 +13,9 @@ using Marvin.Cache.Headers;
 using AspNetCoreRateLimit;
 using Entities.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace CodeMaze_CompanyEmployees.Extensions
 {
@@ -176,32 +177,56 @@ namespace CodeMaze_CompanyEmployees.Extensions
         }
 
         public static void ConfigureIdentity(this IServiceCollection services)
-
         {
-
             var builder = services.AddIdentity<User, IdentityRole>(r =>
-
             {
-
                 r.Password.RequireDigit = true;
-
                 r.Password.RequireLowercase = false;
-
                 r.Password.RequireUppercase = false;
-
                 r.Password.RequireNonAlphanumeric = false;
-
                 r.Password.RequiredLength = 10;
-
                 r.User.RequireUniqueEmail = true;
-
             })
-
             .AddEntityFrameworkStores<RepositoryContext>()
-
             .AddDefaultTokenProviders();
-
         }
 
+        //we are providing values for the issuer, the audience, and the secret key that
+        //the server uses to generate the signature for JWT.
+
+        public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)
+        {
+            var jwtSettings = configuration.GetSection("JwtSettings");
+            /* we extract the JwtSettings from the appsettings.json file and extract our environment 
+             * variable (If you keep getting null for the secret key, try restarting the Visual Studio
+             * or even your computer). */
+            var secretKey = Environment.GetEnvironmentVariable("EnvirKey");
+            /* To create an environment variable, we have to open the cmd window as 
+             * an administrator and type the following command:
+             * setx SECRET "EnvirKey" /M
+             * This is going to create a system environment variable with the name
+             * EnvirKey and the value CodeMazeSecretKey. By using /M we specify that we want 
+             * a system variable and not local. */
+            
+            services.AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+
+                    ValidIssuer = jwtSettings["validIssuer"],
+                    ValidAudience = jwtSettings["validAudience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+                };
+            });
+        }
     }
 }

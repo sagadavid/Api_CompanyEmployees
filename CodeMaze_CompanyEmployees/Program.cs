@@ -82,8 +82,9 @@ builder.Services.AddMemoryCache();//for aspnetcoretatelimit library to go on
 builder.Services.ConfigureRateLimitingOptions();//after extension method... for aspnetcoretatelimit library to go on
 builder.Services.AddHttpContextAccessor();//after extension mehtod.. for aspnetcoretatelimit library to go on
 
-builder.Services.AddAuthentication();
+builder.Services.AddAuthentication();//calls extension
 builder.Services.ConfigureIdentity();
+builder.Services.ConfigureJWT(builder.Configuration);//calls extension
 
 var app = builder.Build();
 
