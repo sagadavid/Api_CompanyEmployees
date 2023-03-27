@@ -15,11 +15,12 @@ namespace Repository
         //seed data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);//required for migration to work properly.
+            base.OnModelCreating(modelBuilder);//required for identity migration to work properly.
 
             //invoke ientitytypeconfiguration implemented classes to seed data/apply configuration
             modelBuilder.ApplyConfiguration(new CompanyConfiguration());
             modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
+            modelBuilder.ApplyConfiguration(new RoleConfiguration());//to insert roles of roleconfiguration.cs
         }
 
 
