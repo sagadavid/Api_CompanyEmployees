@@ -86,6 +86,7 @@ builder.Services.AddHttpContextAccessor();//after extension mehtod.. for aspnetc
 builder.Services.AddAuthentication();//calls extension
 builder.Services.ConfigureIdentity();
 builder.Services.ConfigureJWT(builder.Configuration);//calls extension
+builder.Services.AddJwtConfiguration(builder.Configuration);//ioptions
 
 var app = builder.Build();
 

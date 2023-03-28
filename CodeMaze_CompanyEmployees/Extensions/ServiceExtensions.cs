@@ -238,5 +238,14 @@ namespace CodeMaze_CompanyEmployees.Extensions
                 };//tokencreation and sign in encoding should be same.. otherwise cant use token in sign in
             });
         }
+
+        //using IOptions
+        public static void AddJwtConfiguration
+            (this IServiceCollection services, IConfiguration configuration) =>
+        services.Configure<JwtConfiguration>
+            (configuration.GetSection("JwtSettings"));
+       
+
+
     }
 }
