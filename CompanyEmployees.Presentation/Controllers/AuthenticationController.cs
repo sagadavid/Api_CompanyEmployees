@@ -16,9 +16,11 @@ namespace Presentation.Controllers
 
         [HttpPost]
        // [ServiceFilter(typeof(ValidationFilterAttribute))]
-        public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationDto userForRegistration)
+        public async Task<IActionResult> RegisterUser
+            ([FromBody] UserForRegistrationDto userForRegistration)
         {
-            var result = await _service.AuthenticationService.RegisterUser(userForRegistration);
+            var result = await _service.AuthenticationService
+                .RegisterUser(userForRegistration);
             if (!result.Succeeded)
             {
                 foreach (var error in result.Errors)
@@ -32,16 +34,17 @@ namespace Presentation.Controllers
 
         [HttpPost("login")]
         //[ServiceFilter(typeof(ValidationFilterAttribute))]
-        public async Task<IActionResult> Authenticate([FromBody] UserForAuthenticationDto user)
+        public async Task<IActionResult> Authenticate
+            ([FromBody] UserForAuthenticationDto user)
         {
             if (!await _service.AuthenticationService.ValidateUser(user))
                 return Unauthorized();
 
-            return Ok(new
-            {
-                Token = await _service
-                .AuthenticationService.CreateToken()
-            });
+            //return Ok(new {Token = await _service.AuthenticationService.CreateToken()});
+        var tokenDto = await _service.AuthenticationService
+                .CreateToken(populateExp: true);
+
+            return Ok(tokenDto);
         }
 
     }

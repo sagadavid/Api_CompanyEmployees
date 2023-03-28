@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Repository;
 
@@ -11,9 +12,11 @@ using Repository;
 namespace CodeMaze_CompanyEmployees.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20230328123032_AdditionalUserFiledsForRefreshToken")]
+    partial class AdditionalUserFiledsForRefreshToken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -227,14 +230,14 @@ namespace CodeMaze_CompanyEmployees.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f31cadfc - 1ad9 - 4bdb - 9ecf - 291869a2ddca",
+                            Id = "a663ef6b-53cc-4369-84d5-2396c5e59067",
                             ConcurrencyStamp = "0d14faa0-3d1e-4e9b-8a40-8488c4024fa6",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "661c2bfe-198b-4283-9c6e-26499a2bcf72",
+                            Id = "ecbcff87-367c-4efa-a515-58298c539b6e",
                             ConcurrencyStamp = "fdac610e-f6f2-4949-8439-929adb5620f3",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"

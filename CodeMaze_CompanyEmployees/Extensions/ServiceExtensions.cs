@@ -225,7 +225,7 @@ namespace CodeMaze_CompanyEmployees.Extensions
                     ValidIssuer = jwtSettings["validIssuer"],
                     ValidAudience = jwtSettings["validAudience"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF32.GetBytes(secretKey))
-                };
+                };//tokencreation and sign in encoding should be same.. otherwise cant use token in sign in
             });
         }
     }

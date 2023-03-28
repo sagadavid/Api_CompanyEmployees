@@ -8,6 +8,7 @@ namespace Service.Contracts
         //This method will execute the registration logic and return the identity result to the caller.
         Task<IdentityResult> RegisterUser(UserForRegistrationDto userForRegistration);
         Task<bool> ValidateUser(UserForAuthenticationDto userForAuth);
-        Task<string> CreateToken();
+        //Task<string> CreateToken();
+        Task<TokenDto> CreateToken(bool populateExp);
     }
 }
