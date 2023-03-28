@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Entities.ConfigurationModels;
 
 namespace CodeMaze_CompanyEmployees.Extensions
 {
@@ -196,10 +197,14 @@ namespace CodeMaze_CompanyEmployees.Extensions
 
         public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)
         {
-            var jwtSettings = configuration.GetSection("JwtSettings");
+            //var jwtSettings = configuration.GetSection("JwtSettings");
             /* we extract the JwtSettings from the appsettings.json file and extract our environment 
              * variable (If you keep getting null for the secret key, try restarting the Visual Studio
              * or even your computer). */
+            
+            var jwtConfiguration = new JwtConfiguration();
+                        configuration.Bind(jwtConfiguration.Section, jwtConfiguration);
+
             var secretKey = Environment.GetEnvironmentVariable("EnvirKey");
             /* To create an environment variable, we have to open the cmd window as 
              * an administrator and type the following command:
@@ -222,9 +227,14 @@ namespace CodeMaze_CompanyEmployees.Extensions
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
 
-                    ValidIssuer = jwtSettings["validIssuer"],
-                    ValidAudience = jwtSettings["validAudience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF32.GetBytes(secretKey))
+                    //ValidIssuer = jwtSettings["validIssuer"],
+                    //ValidAudience = jwtSettings["validAudience"],
+                    
+                    ValidIssuer = jwtConfiguration.ValidIssuer,
+                    ValidAudience = jwtConfiguration.ValidAudience,
+
+                    IssuerSigningKey = new SymmetricSecurityKey
+                                            (Encoding.UTF32.GetBytes(secretKey))
                 };//tokencreation and sign in encoding should be same.. otherwise cant use token in sign in
             });
         }
