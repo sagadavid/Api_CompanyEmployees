@@ -51,7 +51,7 @@ namespace Service
             return result;
         }
 
-        public async Task<string> CreateToken()
+        public async Task<string> CreateToken()//Our token expires after five minutes after the creation point.
         {
             var signingCredentials = GetSigningCredentials();
             var claims = await GetClaims();
@@ -62,7 +62,7 @@ namespace Service
 
         private SigningCredentials GetSigningCredentials()
         {
-            //Encoding.UTF32.GetBytes(Environment.GetEnvironmentVariable("EnvirKey"));
+            //Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("EnvirKey"));
             var key = Encoding.UTF32.GetBytes(Environment.GetEnvironmentVariable("EnvirKey"));
             var secret = new SymmetricSecurityKey(key);
 
