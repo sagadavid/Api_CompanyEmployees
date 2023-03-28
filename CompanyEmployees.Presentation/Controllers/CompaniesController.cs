@@ -23,7 +23,7 @@ namespace CompanyEmployees.Presentation.Controllers
         //[ResponseCache(CacheProfileName = "120SecondsDuration")]//configured in program.cs..now, this cache rule
         //will apply to all the actions inside the controller EXCEPT
         //the ones that already have the ResponseCache attribute applied.
-        [Authorize]
+        [Authorize(Roles ="Manager")]
         public async Task<IActionResult> GetCompanies()//when we async modify, dont need to add to method names in controller
         {
             /*no need for try-catch, after error hanler middleware added*/

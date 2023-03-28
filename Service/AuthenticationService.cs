@@ -62,6 +62,7 @@ namespace Service
 
         private SigningCredentials GetSigningCredentials()
         {
+            //Encoding.UTF32.GetBytes(Environment.GetEnvironmentVariable("EnvirKey"));
             var key = Encoding.UTF32.GetBytes(Environment.GetEnvironmentVariable("EnvirKey"));
             var secret = new SymmetricSecurityKey(key);
 
