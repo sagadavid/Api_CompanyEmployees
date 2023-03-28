@@ -9,6 +9,7 @@ using Presentation.ActionFilters;
 using Service.DataShaping;
 using Shared.DataTransferObjects;
 using AspNetCoreRateLimit;
+using Microsoft.IdentityModel.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 

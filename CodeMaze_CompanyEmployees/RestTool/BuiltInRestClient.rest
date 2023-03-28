@@ -97,11 +97,41 @@ POST {{root}}/authentication
 "firstname":"david",
 "lastname":"saga",
 "username":"davids",
-"password":"passme1nn",
+"password":"passme1nn1",
 "email":"testinginn@testing.com",
 "phonenumber":"123-987",
 "roles":["Manager"]
 }
+### registration in postman succeeded
+POST https://localhost:7165/api/authentication
+{
+"firstname":"david2",
+"lastname":"saga2",
+"username":"davids2",
+"password":"passme1nn12",
+"email":"testinginn2@testing.com",
+"phonenumber":"123-982",
+"roles":["Manager"]
+}
+# 201 created
 # works fine in postman.. just dont know how to send here, yet
 
-###
+### login failed 
+POST https://localhost:7165/api/authentication/login
+{
+"username":"davids2",
+"password":"passme1nn12"
+}
+# problem solved.. SECRETKEY --> EnvirKey
+# {
+#    "StatusCode": 500,
+#    "Message": "String reference not set to an instance of a String. (Parameter 's')"
+#}
+#
+#{
+#    "StatusCode": 500,
+# "Message": "IDX10653: The encryption algorithm 'HS256' requires a key size of at least '128' bits. 
+# Key '[PII of type 'Microsoft.IdentityModel.Tokens.SymmetricSecurityKey' is hidden. 
+# For more details, see https://aka.ms/IdentityModel/PII.]', is of size: '64'. (Parameter 'key')"
+#}
+
