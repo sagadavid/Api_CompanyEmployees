@@ -118,11 +118,18 @@ POST https://localhost:7165/api/authentication
 
 ### login succeeded : token in response body
 POST https://localhost:7165/api/authentication/login
+Request-Headers BODY
 {
 "username":"davids2",
 "password":"passme1nn12"
 }
-# problem below solved.. SECRETKEY --> EnvirKey
+RESPONSE BODY
+{
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZGF2aWRzIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiTWFuYWdlciIsImV4cCI6MTY4MDAxMDgxMSwiaXNzIjoiZGF2aWRzQVBJIiwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NzE2NSJ9.fTkQ0_aKe5fNhZt1HDhc-TnKE3Wztf-4Df50MZ-t-o0",
+    "refreshToken": "4NnIxYdY8GvILOTBKvAhdorzc9wopOLoHny3Tyi3IVM="
+}
+
+### problem below solved.. SECRETKEY --> EnvirKey
 # {
 #    "StatusCode": 500,
 #    "Message": "String reference not set to an instance of a String. (Parameter 's')"
@@ -135,3 +142,14 @@ POST https://localhost:7165/api/authentication/login
 # For more details, see https://aka.ms/IdentityModel/PII.]', is of size: '64'. (Parameter 'key')"
 #}
 
+### access and refresh tokens 
+GET https://localhost:7165/api/companies/
+Authorization : BearerToken {**********}
+# success in postman 
+
+### 
+POST https://localhost:7165/api/token/refresh
+{
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZGF2aWRzIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiTWFuYWdlciIsImV4cCI6MTY4MDAxMDMwOCwiaXNzIjoiZGF2aWRzQVBJIiwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NzE2NSJ9._PscBwaAjxM8oJjGj3pgQaNdpdFUQQMBPGsFtBFifbk",
+    "refreshToken": "0CfSo4j1lPVkipeCLQjgM1Tt6JBkF2Y1bl/UsO3npk0="
+}
