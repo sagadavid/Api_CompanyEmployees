@@ -1,29 +1,42 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="NewFolder\**" />
-    <EmbeddedResource Remove="NewFolder\**" />
-    <None Remove="NewFolder\**" />
-  </ItemGroup>
+	<!-- 1) need to suppress warning 1591, which will now give warnings about any method, 
+	class, or field that doesn’t have triple-slash comments
+	2 ) add the documentation path for the same project, since our controllers are in 
+	the Presentation project-->
+	<!--<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DocumentationFile>CompanyEmployees.Presentation.xml</DocumentationFile>
+		<OutputPath></OutputPath>
+		<NoWarn>1701;1702;1591</NoWarn>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<NoWarn>1701;1702;1591</NoWarn>
+	</PropertyGroup>-->
 
-  <ItemGroup>
-    <PackageReference Include="Marvin.Cache.Headers" Version="6.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="8.0.0-preview.1.23112.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.15" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.27.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="NewFolder\**" />
+		<EmbeddedResource Remove="NewFolder\**" />
+		<None Remove="NewFolder\**" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Service.Contracts\Service.Contracts.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Marvin.Cache.Headers" Version="6.1.0" />
+		<PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="8.0.0-preview.1.23112.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.15" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.27.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Service.Contracts\Service.Contracts.csproj" />
+	</ItemGroup>
 
 </Project>

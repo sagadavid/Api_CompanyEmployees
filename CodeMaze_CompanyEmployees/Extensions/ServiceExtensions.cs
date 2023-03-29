@@ -255,14 +255,33 @@ namespace CodeMaze_CompanyEmployees.Extensions
                 s.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Title = "davids Code Maze API",
-                    Version = "v1"
+                    Version = "v1",
+                    Description = "CompanyEmployees API by CodeMaze/davidsaga",
+                    TermsOfService = new Uri("https://example.com/terms"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "davidsaga",
+                        Email = "epostsaga@gmail.com",
+                        Url = new Uri("https://twitter.com/johndoe"),
+                    },
+
+                    License = new OpenApiLicense
+                    {
+                        Name = "CompanyEmployees API LICX",
+                        Url = new Uri("https://example.com/license"),
+                    }
                 });
 
                 s.SwaggerDoc("v2", new OpenApiInfo
                 {
                     Title = "davids Code Maze API",
-                    Version = "v2"
+                    Version = "v2",
                 });
+
+                //enable xml comments on swagger
+                //var xmlFile = $"{typeof(Presentation.AssemblyReference).Assembly.GetName().Name}.xml";
+                //var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                //s.IncludeXmlComments(xmlPath);
 
                 //to be able able to unlock swagger and use authorization etc properly
                 s.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -286,11 +305,11 @@ namespace CodeMaze_CompanyEmployees.Extensions
                         new List<string>()
                     }
                 });
-
+                
                 //https://localhost:7165/swagger/v1/swagger.json
                 //https://localhost:7165/swagger/v2/swagger.json
                 //https://localhost:7165/swagger/index.html
-
+                //pasting jwt token into swagger authorize:Bearer+" "+token
             });
         }
     }
