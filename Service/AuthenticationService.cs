@@ -21,8 +21,9 @@ namespace Service
         private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
-        private readonly IOptions<JwtConfiguration> _configuration;
-        //private readonly IConfiguration _configuration;
+        //private readonly IConfiguration _configuration;//replaced with ioptions
+        //private readonly IOptions<JwtConfiguration> _configuration;//replaced with ioptionsmonitor version below 
+        private readonly IOptionsMonitor<JwtConfiguration> _configuration;
         private readonly JwtConfiguration _jwtConfiguration;
 
         private User? _user;
@@ -30,16 +31,18 @@ namespace Service
         public AuthenticationService 
             (ILoggerManager logger, IMapper mapper, 
             UserManager<User> userManager,
-            IOptions<JwtConfiguration> configuration) 
             //IConfiguration configuration)
+             //IOptions<JwtConfiguration> configuration)
+            IOptionsMonitor<JwtConfiguration> configuration)
         {
             _logger = logger;
             _mapper = mapper;
             _userManager = userManager;
             _configuration = configuration;
             //_jwtConfiguration = new JwtConfiguration();
-            //_configuration.Bind(_jwtConfiguration.Section, _jwtConfiguration);
-            _jwtConfiguration = _configuration.Value;
+            //_configuration.Bind(_jwtConfiguration.Section, _jwtConfiguration);//ioptions is better than binding the whole Configuration
+            //_jwtConfiguration = _configuration.Value;//use the Value property to extract the JwtConfiguration object with all the populated properties.
+            _jwtConfiguration = _configuration.CurrentValue;//ioptionsmonitor version
         }
 
         public async Task<IdentityResult> RegisterUser
