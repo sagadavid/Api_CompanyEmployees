@@ -13,6 +13,7 @@ namespace CompanyEmployees.Presentation.Controllers
     [ApiVersion("1.0")]////no need to use when version by convention is added in extension method
     [Route("api/companies")]
     [ApiController]
+    [ApiExplorerSettings(GroupName = "v1")]
     public class CompaniesController : ControllerBase
     {
         private IServiceManager _serviceManger;

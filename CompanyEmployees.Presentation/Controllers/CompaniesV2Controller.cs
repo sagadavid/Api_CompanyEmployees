@@ -13,6 +13,7 @@ namespace Presentation.Controllers
     //[Route("api/companies")]//versioning by query string
     [Route("api/companies")]//versioning by http header
     [ApiController]
+    [ApiExplorerSettings(GroupName = "v2")]
     public class CompaniesV2Controller : ControllerBase
     {
         private readonly IServiceManager _service;

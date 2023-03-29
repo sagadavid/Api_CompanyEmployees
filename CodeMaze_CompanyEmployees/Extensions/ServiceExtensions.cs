@@ -17,7 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Entities.ConfigurationModels;
-using FluentAssertions.Common;
+using Microsoft.OpenApi.Models;
 
 namespace CodeMaze_CompanyEmployees.Extensions
 {
@@ -247,8 +247,23 @@ namespace CodeMaze_CompanyEmployees.Extensions
             (configuration.GetSection("JwtSettings"));
         //services.Configure<JwtConfiguration>
         //    (configuration.GetSection("JwtSettings2"));//named options
-       
 
-
+        public static void ConfigureSwagger(this IServiceCollection services)
+        {
+            services.AddSwaggerGen(s =>
+            {
+                s.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "davids Code Maze API",
+                    Version = "v1"
+                });
+                
+                s.SwaggerDoc("v2", new OpenApiInfo
+                {
+                    Title = "davids Code Maze API",
+                    Version = "v2"
+                });
+            });
+        }
     }
 }

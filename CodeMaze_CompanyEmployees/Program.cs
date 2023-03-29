@@ -87,6 +87,7 @@ builder.Services.AddAuthentication();//calls extension
 builder.Services.ConfigureIdentity();
 builder.Services.ConfigureJWT(builder.Configuration);//calls extension
 builder.Services.AddJwtConfiguration(builder.Configuration);//ioptions
+builder.Services.ConfigureSwagger();//swagger document generator is in the extension method and ui is below in pipiline
 
 var app = builder.Build();
 
@@ -134,5 +135,12 @@ app.MapControllers();
 //default route configuration for MVC
 //app.UseRouting();
 //app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.UseSwagger();
+app.UseSwaggerUI(s =>
+{
+    s.SwaggerEndpoint("/swagger/v1/swagger.json", "davids Code Maze API v1");
+    s.SwaggerEndpoint("/swagger/v2/swagger.json", "davids Code Maze API v2");
+});
 
 app.Run();

@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.ServiceFabric" Version="9.1.1583" />
     <PackageReference Include="NPOI" Version="2.6.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
 </Project>
