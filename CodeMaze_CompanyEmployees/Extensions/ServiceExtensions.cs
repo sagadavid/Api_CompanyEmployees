@@ -23,18 +23,18 @@ namespace CodeMaze_CompanyEmployees.Extensions
 {
     public static class ServiceExtensions
     {
-     //ADD CORS
-        public static void ConfigureCors(this IServiceCollection services)=> 
+        //ADD CORS
+        public static void ConfigureCors(this IServiceCollection services) =>
             services.AddCors(options =>
             {
-                options.AddPolicy("CorsPolicy", builder =>builder
+                options.AddPolicy("CorsPolicy", builder => builder
                 //.WithOrigins("https://someweb.com").WithMethods("GET").WithHeaders("accept")
                 .AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
                 .WithExposedHeaders("X-Pagination"));//to enable the client application to read the new X-Pagination
                                                      //header that we’ve added in our action,
                                                      //we have to modify the CORS configuration
 
-                
+
             });
         public static void ConfigureIISIntegration(this IServiceCollection services) =>
             services.Configure<IISOptions>(options =>
@@ -66,12 +66,12 @@ namespace CodeMaze_CompanyEmployees.Extensions
          * We are not specifying the MigrationAssembly inside the UseSqlServer method. 
          * We don’t need it in this case.
          * and.. call this method in the Program class*/
-        public static void ConfigureSqlContext(this IServiceCollection services, 
+        public static void ConfigureSqlContext(this IServiceCollection services,
             IConfiguration configuration) =>
                 services.AddDbContext<RepositoryContext>(opts =>
                     opts.UseSqlServer(configuration.GetConnectionString("sqlConnection")));
 
-     //to get custom formatte response...formatcsv()
+        //to get custom formatte response...formatcsv()
         public static IMvcBuilder AddCustomCSVFormatter(this IMvcBuilder builder) =>
             builder.AddMvcOptions(config => config.OutputFormatters.Add(new
             CsvOutputFormatter()));
@@ -202,9 +202,9 @@ namespace CodeMaze_CompanyEmployees.Extensions
             /* we extract the JwtSettings from the appsettings.json file and extract our environment 
              * variable (If you keep getting null for the secret key, try restarting the Visual Studio
              * or even your computer). */
-            
+
             var jwtConfiguration = new JwtConfiguration();
-                        configuration.Bind(jwtConfiguration.Section, jwtConfiguration);
+            configuration.Bind(jwtConfiguration.Section, jwtConfiguration);
 
             var secretKey = Environment.GetEnvironmentVariable("EnvirKey");
             /* To create an environment variable, we have to open the cmd window as 
@@ -213,7 +213,7 @@ namespace CodeMaze_CompanyEmployees.Extensions
              * This is going to create a system environment variable with the name
              * EnvirKey and the value CodeMazeSecretKey. By using /M we specify that we want 
              * a system variable and not local. */
-            
+
             services.AddAuthentication(opt =>
             {
                 opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -230,7 +230,7 @@ namespace CodeMaze_CompanyEmployees.Extensions
 
                     //ValidIssuer = jwtSettings["validIssuer"],
                     //ValidAudience = jwtSettings["validAudience"],
-                    
+
                     ValidIssuer = jwtConfiguration.ValidIssuer,
                     ValidAudience = jwtConfiguration.ValidAudience,
 
@@ -257,12 +257,40 @@ namespace CodeMaze_CompanyEmployees.Extensions
                     Title = "davids Code Maze API",
                     Version = "v1"
                 });
-                
+
                 s.SwaggerDoc("v2", new OpenApiInfo
                 {
                     Title = "davids Code Maze API",
                     Version = "v2"
                 });
+
+                //to be able able to unlock swagger and use authorization etc properly
+                s.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Place to add JWT with Bearer",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+
+                s.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            { Type = ReferenceType.SecurityScheme, Id = "Bearer"},
+                            Name = "Bearer",
+                        },
+                        new List<string>()
+                    }
+                });
+
+                //https://localhost:7165/swagger/v1/swagger.json
+                //https://localhost:7165/swagger/v2/swagger.json
+                //https://localhost:7165/swagger/index.html
+
             });
         }
     }

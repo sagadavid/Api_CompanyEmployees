@@ -138,7 +138,7 @@ app.MapControllers();
 
 app.UseSwagger();
 app.UseSwaggerUI(s =>
-{
+{//to see a json document containing all the controllers and actions
     s.SwaggerEndpoint("/swagger/v1/swagger.json", "davids Code Maze API v1");
     s.SwaggerEndpoint("/swagger/v2/swagger.json", "davids Code Maze API v2");
 });
