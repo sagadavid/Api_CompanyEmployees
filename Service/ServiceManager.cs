@@ -42,7 +42,7 @@ namespace Service
 }
 
 /* to enable jwtsettings value change without restarting 
-           * the app (configurstion reloading),
+           * the app (configuration reloading),
            * All we would have to do is to replace the IOptions<JwtConfiguration> type 
            * with the IOptionsSnapshot<JwtConfiguration> or IOptionsMonitor<JwtConfiguration>
            * types inside the ServiceManager and AuthenticationService classes.

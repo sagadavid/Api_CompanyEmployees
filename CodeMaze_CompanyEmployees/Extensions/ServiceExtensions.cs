@@ -17,6 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Entities.ConfigurationModels;
+using FluentAssertions.Common;
 
 namespace CodeMaze_CompanyEmployees.Extensions
 {
@@ -244,6 +245,8 @@ namespace CodeMaze_CompanyEmployees.Extensions
             (this IServiceCollection services, IConfiguration configuration) =>
         services.Configure<JwtConfiguration>
             (configuration.GetSection("JwtSettings"));
+        //services.Configure<JwtConfiguration>
+        //    (configuration.GetSection("JwtSettings2"));//named options
        
 
 

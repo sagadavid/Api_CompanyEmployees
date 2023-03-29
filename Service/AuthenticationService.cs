@@ -43,6 +43,7 @@ namespace Service
             //_configuration.Bind(_jwtConfiguration.Section, _jwtConfiguration);//ioptions is better than binding the whole Configuration
             //_jwtConfiguration = _configuration.Value;//use the Value property to extract the JwtConfiguration object with all the populated properties.
             _jwtConfiguration = _configuration.CurrentValue;//ioptionsmonitor version
+            //_jwtConfiguration = _configuration.Get("JwtSettings");//to enable named options
         }
 
         public async Task<IdentityResult> RegisterUser
