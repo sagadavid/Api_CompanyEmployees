@@ -133,8 +133,8 @@ namespace CodeMaze_CompanyEmployees.Extensions
                 //Now, we can remove the [ApiVersion] attribute from the controllers.
                 opt.Conventions.Controller<CompaniesController>()
                         .HasApiVersion(new ApiVersion(1, 0));
-                opt.Conventions.Controller<CompaniesV2Controller>()
-                        .HasDeprecatedApiVersion(new ApiVersion(2, 0));
+                //opt.Conventions.Controller<CompaniesV2Controller>()
+                //        .HasDeprecatedApiVersion(new ApiVersion(2, 0));
 
             });
 

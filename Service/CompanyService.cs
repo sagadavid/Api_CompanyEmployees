@@ -2,6 +2,7 @@
 using Contracts;
 using Entities.Exceptions;
 using Entities.Models;
+using Entities.Response;
 using Service.Contracts;
 using Shared.DataTransferObjects;
 using System;
@@ -14,8 +15,8 @@ namespace Service
 {
     internal sealed class CompanyService : ICompanyService
     {
-        //using IRepositoryManager to access the repository methods
-        //from each user repository class (CompanyRepository or EmployeeRepository)
+        ////using IRepositoryManager to access the repository methods
+        ////from each user repository class (CompanyRepository or EmployeeRepository)
         private readonly IRepositoryManager _repositoryManager;
         private readonly ILoggerManager _logManager;
         private readonly IMapper _mapper;
@@ -27,7 +28,7 @@ namespace Service
             _repositoryManager = repoMan;
             _mapper = mapper;
         }
-
+        /* commented due to response performance improvement
         public async Task<CompanyDto> CreateCompanyAsync(CompanyForCreationDto company)
 
         {
@@ -54,7 +55,7 @@ namespace Service
 
         public async Task<IEnumerable<CompanyDto>> GetAllCompaniesAsync(bool trackChanges)
         {
-            /*no need for try-catch, after error hanler middleware added*/
+            //no need for try-catch, after error hanler middleware added/
 
             var companies = await _repositoryManager.CompanyRepo.GetAllCompaniesAsync(trackChanges);
             ////instead of manual mapping as above, use imapper, below
@@ -117,7 +118,23 @@ namespace Service
             if (company is null)
                 throw new CompanyNotFoundException(id);
             return company;
+        } 
+        */
+
+        public ApiBaseResponse GetAllCompanies(bool trackChanges)
+        {
+            var companies = _repositoryManager.CompanyRepo.GetAllCompaniesAsync(trackChanges);
+            var companiesDto = _mapper.Map<IEnumerable<CompanyDto>>(companies);
+            return new ApiOkResponse<IEnumerable<CompanyDto>>(companiesDto);
         }
 
+        public ApiBaseResponse GetCompany(Guid id, bool trackChanges)
+        {
+            var company = _repositoryManager.CompanyRepo.GetCompanyByIdAsync(id, trackChanges);
+            if (company is null)
+                return new CompanyNotFoundResponse(id);
+            var companyDto = _mapper.Map<CompanyDto>(company);
+            return new ApiOkResponse<CompanyDto>(companyDto);
+        }
     }
 }

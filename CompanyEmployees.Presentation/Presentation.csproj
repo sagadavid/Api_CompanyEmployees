@@ -20,12 +20,6 @@
 	</PropertyGroup>-->
 
 	<ItemGroup>
-		<Compile Remove="NewFolder\**" />
-		<EmbeddedResource Remove="NewFolder\**" />
-		<None Remove="NewFolder\**" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="Marvin.Cache.Headers" Version="6.1.0" />
 		<PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="8.0.0-preview.1.23112.2" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
