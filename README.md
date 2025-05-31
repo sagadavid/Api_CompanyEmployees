@@ -19,8 +19,6 @@ The project follows best practices in building **RESTful Web APIs** using **ASP.
 ## Technologies Used
 - ASP.NET Core
 - Entity Framework Core
-- SignalR
-- Docker
 - MSSQL
 - Swagger
 - AutoMapper
